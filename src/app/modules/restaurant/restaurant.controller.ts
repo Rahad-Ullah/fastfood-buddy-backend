@@ -47,8 +47,22 @@ const deleteRestaurant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all restaurants controller
+const getAllRestaurants = catchAsync(async (req: Request, res: Response) => {
+  const result = await RestaurantServices.getAllRestaurants(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Restaurants retrieved successfully',
+    data: result.result,
+    pagination: result.pagination,
+  });
+});
+
 export const RestaurantController = {
   createRestaurant,
   updateRestaurant,
   deleteRestaurant,
+  getAllRestaurants,
 };

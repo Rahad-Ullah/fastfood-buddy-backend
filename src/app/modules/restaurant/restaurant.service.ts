@@ -3,6 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { IRestaurant } from './restaurant.interface';
 import { Restaurant } from './restaurant.model';
 import unlinkFile from '../../../shared/unlinkFile';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // ------------ create restaurant ------------
 export const createRestaurant = async (
@@ -70,8 +71,28 @@ const deleteRestaurant = async (id: string): Promise<IRestaurant | null> => {
   return result;
 };
 
+// get all restaurants
+const getAllRestaurants = async (query: Record<string, unknown>) => {
+  const restaurantQuery = new QueryBuilder(
+    Restaurant.find({ isDeleted: false }),
+    query
+  )
+    .search(['name'])
+    .filter()
+    .sort()
+    .paginate();
+
+  const [result, pagination] = await Promise.all([
+    restaurantQuery.modelQuery.lean(),
+    restaurantQuery.getPaginationInfo(),
+  ]);
+
+  return { result, pagination };
+};
+
 export const RestaurantServices = {
   createRestaurant,
   updateRestaurant,
   deleteRestaurant,
+  getAllRestaurants,
 };

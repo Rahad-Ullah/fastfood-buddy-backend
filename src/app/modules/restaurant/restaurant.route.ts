@@ -33,4 +33,11 @@ router.delete(
   RestaurantController.deleteRestaurant
 );
 
+// Get all restaurants route
+router.get(
+  '/',
+  auth(),
+  RestaurantController.getAllRestaurants
+);
+
 export const restaurantRoutes = router;
