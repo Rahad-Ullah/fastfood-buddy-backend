@@ -29,10 +29,6 @@ const userSchema = new Schema<IUser, UserModal>(
       select: 0,
       minlength: 8,
     },
-    phone: {
-      type: String,
-      default: '',
-    },
     image: {
       type: String,
       default: '',

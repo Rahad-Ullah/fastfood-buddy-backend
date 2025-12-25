@@ -6,7 +6,6 @@ export type IUser = {
   role: USER_ROLES;
   email: string;
   password: string;
-  phone: string;
   image?: string;
   status: USER_STATUS;
   isVerified: boolean;

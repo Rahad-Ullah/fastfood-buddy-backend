@@ -9,7 +9,7 @@ import { IUser } from './user.interface';
 import { User } from './user.model';
 import { USER_ROLES } from './user.constant';
 
-const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
+const createUserToDB = async (payload: Partial<IUser>) => {
   //set role
   payload.role = USER_ROLES.USER;
   const createUser = await User.create(payload);
@@ -37,7 +37,7 @@ const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
     { $set: { authentication } }
   );
 
-  return createUser;
+  return 'We have sent you an email with a one-time code to verify your account. Please check your email.';
 };
 
 const getSingleUserFromDB = async (id: string): Promise<Partial<IUser>> => {
