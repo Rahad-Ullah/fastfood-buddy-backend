@@ -35,7 +35,20 @@ const updateRestaurant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// delete restaurant controller
+const deleteRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const result = await RestaurantServices.deleteRestaurant(req.params.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Restaurant deleted successfully',
+    data: result,
+  });
+});
+
 export const RestaurantController = {
   createRestaurant,
   updateRestaurant,
+  deleteRestaurant,
 };

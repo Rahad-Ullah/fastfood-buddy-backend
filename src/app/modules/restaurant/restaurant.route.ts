@@ -19,11 +19,18 @@ router.post(
 
 // Update restaurant route
 router.patch(
-  '/update/:id',
+  '/:id',
   auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
   fileUploadHandler(),
   validateRequest(RestaurantValidations.updateRestaurantSchema),
   RestaurantController.updateRestaurant
+);
+
+// Delete restaurant route
+router.delete(
+  '/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  RestaurantController.deleteRestaurant
 );
 
 export const restaurantRoutes = router;
