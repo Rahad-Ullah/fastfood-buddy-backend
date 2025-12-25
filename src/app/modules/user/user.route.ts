@@ -23,6 +23,13 @@ router.patch(
   UserController.updateProfile
 );
 
+// toggle user status
+router.patch(
+  '/toggle-status/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  UserController.toggleUserStatus
+);
+
 // get profile
 router.get('/profile', auth(), UserController.getUserProfile);
 

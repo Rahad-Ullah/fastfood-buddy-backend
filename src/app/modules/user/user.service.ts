@@ -7,7 +7,7 @@ import unlinkFile from '../../../shared/unlinkFile';
 import generateOTP from '../../../util/generateOTP';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { USER_ROLES } from './user.constant';
+import { USER_ROLES, USER_STATUS } from './user.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 
 const createUserToDB = async (payload: Partial<IUser>) => {
@@ -63,6 +63,30 @@ const updateProfileToDB = async (
   return updateDoc;
 };
 
+// toggle user status
+const toggleUserStatus = async (id: string) => {
+  const isExistUser = await User.findById(id);
+  if (!isExistUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  const result = await User.findByIdAndUpdate(
+    id,
+    [
+      {
+        $set: {
+          status:
+            isExistUser.status === USER_STATUS.ACTIVE
+              ? USER_STATUS.INACTIVE
+              : USER_STATUS.ACTIVE,
+        },
+      },
+    ],
+    { new: true }
+  );
+  return result;
+};
+
 //get single user by id
 const getSingleUserFromDB = async (id: string): Promise<Partial<IUser>> => {
   const isExistUser = await User.isExistUserById(id);
@@ -75,7 +99,10 @@ const getSingleUserFromDB = async (id: string): Promise<Partial<IUser>> => {
 
 // get all users
 const getAllUsersFromDB = async (query: Record<string, unknown>) => {
-  const userQuery = new QueryBuilder(User.find({ isDeleted: false }), query)
+  const userQuery = new QueryBuilder(
+    User.find({ isDeleted: false, role: { $ne: USER_ROLES.SUPER_ADMIN } }),
+    query
+  )
     .search(['name', 'email'])
     .filter()
     .sort()
@@ -93,6 +120,7 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
 export const UserService = {
   createUserToDB,
   updateProfileToDB,
+  toggleUserStatus,
   getSingleUserFromDB,
   getAllUsersFromDB,
 };
