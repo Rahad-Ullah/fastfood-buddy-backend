@@ -1,6 +1,6 @@
-# Backend Template for TypeScript, Express and Mongoose
+# Fastfood Buddy
 
-This is a template project for backend development using Typescript, Node.js, Express, Mongoose, Bcrypt, JWT, NodeMailer, Multer, ESLint, and Prettier. The aim is to reduce setup time for new backend projects.
+Diabetes is confusing. Fast Food Buddy™ helps you understand why things happen. The project is for backend development of **Fastfood Buddy** using Typescript, Node.js, Express, Mongoose, Bcrypt, JWT, NodeMailer, Multer, ESLint, and Prettier. The aim is to reduce setup time for new backend projects.
 
 ## Features
 
@@ -47,8 +47,8 @@ Ensure you have the following installed:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Rahad-Ullah/backend-template-typescript-mongoose-express.git
-   cd backend-template-typescript-mongoose-express
+   git clone https://github.com/Rahad-Ullah/fastfood-buddy-backend.git
+   cd fastfood-buddy-backend
    ```
 
 2. **Install dependencies:**
@@ -62,7 +62,7 @@ Ensure you have the following installed:
    Using yarn:
 
    ```bash
-   yarn
+   yarn install
    ```
 
 3. **Create a `.env` file:**
@@ -70,9 +70,9 @@ Ensure you have the following installed:
    In the root directory of the project, create a `.env` file and add the following variables. Adjust the values according to your setup.
 
    ```env
-   SERVER_NAME=template
+   SERVER_NAME=Fastfood Buddy
    NODE_ENV=development
-   DATABASE_URL=mongodb://127.0.0.1:27017/template
+   DATABASE_URL=mongodb://127.0.0.1:27017/fastfood-buddy
    IP_ADDRESS=10.10.7.7
    PORT=5000      # for production after build (`npm start`)
    PORT_DEV=5001  # for development (`npm run dev`)
@@ -110,10 +110,40 @@ Ensure you have the following installed:
    yarn dev
    ```
 
-### Running the Tests
 
-Explain how to run the automated tests for this system.
+## 📝 Semantic Commit Guide
 
+We use **Conventional Commits** with **Commitizen** to keep commit messages consistent and help with automatic versioning.
+
+### How to Commit
+
+**1. Stage your changes:**
 ```bash
-npm test
+git add .
 ```
+
+**2. Run the Commitizen prompt:**
+```bash
+npm run commit
+```
+
+**3. Follow the prompts:**
+
+- **Type:** feat, fix, chore, docs, etc.
+- **Scope (optional):** e.g., `job-post`
+- **Short description:** what changed
+- **Breaking change (optional):** if it breaks existing code (yes/no)
+- **Open Issue:** if it affects any open issues (yes/no)
+
+### Examples
+```bash
+feat(job-post): add create job post endpoint
+fix(auth): correct password validation
+chore(commit): setup Commitizen for structured commits
+feat!(job-post): change payload structure (breaking)
+```
+
+### Tips
+- Always use `npm run commit` instead of `git commit`.
+- Keep the description short and clear.
+- Only mark breaking changes if the API or behavior changes.
