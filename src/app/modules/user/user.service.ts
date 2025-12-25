@@ -8,6 +8,7 @@ import generateOTP from '../../../util/generateOTP';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 import { USER_ROLES } from './user.constant';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createUserToDB = async (payload: Partial<IUser>) => {
   //set role
@@ -40,15 +41,6 @@ const createUserToDB = async (payload: Partial<IUser>) => {
   return 'We have sent you an email with a one-time code to verify your account. Please check your email.';
 };
 
-const getSingleUserFromDB = async (id: string): Promise<Partial<IUser>> => {
-  const isExistUser = await User.isExistUserById(id);
-  if (!isExistUser) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
-  }
-
-  return isExistUser;
-};
-
 const updateProfileToDB = async (
   user: JwtPayload,
   payload: Partial<IUser>
@@ -71,8 +63,36 @@ const updateProfileToDB = async (
   return updateDoc;
 };
 
+//get single user by id
+const getSingleUserFromDB = async (id: string): Promise<Partial<IUser>> => {
+  const isExistUser = await User.isExistUserById(id);
+  if (!isExistUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  return isExistUser;
+};
+
+// get all users
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(User.find({ isDeleted: false }), query)
+    .search(['name', 'email'])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [result, pagination] = await Promise.all([
+    userQuery.modelQuery.lean(),
+    userQuery.getPaginationInfo(),
+  ]);
+
+  return { result, pagination };
+};
+
 export const UserService = {
   createUserToDB,
-  getSingleUserFromDB,
   updateProfileToDB,
+  getSingleUserFromDB,
+  getAllUsersFromDB,
 };

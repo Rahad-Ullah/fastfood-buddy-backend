@@ -5,6 +5,7 @@ import { getSingleFilePath } from '../../../shared/getFilePath';
 import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './user.service';
 
+// create user
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const { ...userData } = req.body;
   const result = await UserService.createUserToDB(userData);
@@ -13,17 +14,6 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'User created successfully',
-    data: result,
-  });
-});
-
-const getUserProfile = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.getSingleUserFromDB(req.user.id);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: 'Profile data retrieved successfully',
     data: result,
   });
 });
@@ -47,4 +37,47 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const UserController = { createUser, getUserProfile, updateProfile };
+// get profile
+const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getSingleUserFromDB(req.user.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Profile data retrieved successfully',
+    data: result,
+  });
+});
+
+// get single user by id
+const getUserById = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getSingleUserFromDB(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'User data retrieved successfully',
+    data: result,
+  });
+});
+
+// get all users
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getAllUsersFromDB(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Users data retrieved successfully',
+    data: result.result,
+    pagination: result.pagination,
+  });
+});
+
+export const UserController = {
+  createUser,
+  updateProfile,
+  getUserProfile,
+  getUserById,
+  getAllUsers,
+};
