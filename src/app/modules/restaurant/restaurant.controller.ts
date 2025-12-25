@@ -19,6 +19,23 @@ const createRestaurant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// update restaurant controller
+const updateRestaurant = catchAsync(async (req: Request, res: Response) => {
+  const image = getSingleFilePath(req.files, 'image');
+  if(image) {
+    req.body.logo = image;
+  }
+  const result = await RestaurantServices.updateRestaurant(req.params.id, req.body);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Restaurant updated successfully',
+    data: result,
+  });
+});
+
 export const RestaurantController = {
   createRestaurant,
+  updateRestaurant,
 };

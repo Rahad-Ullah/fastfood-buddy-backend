@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { IRestaurant } from './restaurant.interface';
 import { Restaurant } from './restaurant.model';
+import unlinkFile from '../../../shared/unlinkFile';
 
 // ------------ create restaurant ------------
 export const createRestaurant = async (
@@ -18,6 +19,28 @@ export const createRestaurant = async (
   return result;
 };
 
+// ------------ update restaurant ------------
+const updateRestaurant = async (
+  id: string,
+  payload: Partial<IRestaurant>
+): Promise<IRestaurant | null> => {
+  // check if restaurant exists
+  const existingRestaurant = await Restaurant.findById(id);
+  if (!existingRestaurant) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Restaurant not found');
+  }
+
+  const result = await Restaurant.findByIdAndUpdate(id, payload, { new: true });
+
+  // unlink old image if new image is provided
+  if (payload.logo && existingRestaurant.logo && result?.logo) {
+    unlinkFile(existingRestaurant.logo);
+  }
+
+  return result;
+};
+
 export const RestaurantServices = {
   createRestaurant,
+  updateRestaurant,
 };

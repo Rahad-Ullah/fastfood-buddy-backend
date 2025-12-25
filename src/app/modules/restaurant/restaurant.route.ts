@@ -17,4 +17,13 @@ router.post(
   RestaurantController.createRestaurant
 );
 
+// Update restaurant route
+router.patch(
+  '/update/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  fileUploadHandler(),
+  validateRequest(RestaurantValidations.updateRestaurantSchema),
+  RestaurantController.updateRestaurant
+);
+
 export const restaurantRoutes = router;
