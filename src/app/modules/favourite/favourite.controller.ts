@@ -19,6 +19,19 @@ const createFavourite = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// -------------- delete favourite --------------
+const deleteFavourite = catchAsync(async (req: Request, res: Response) => {
+  const result = await FavouriteServices.deleteFavourite(req.params.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Favourite deleted successfully',
+    data: result,
+  });
+});
+
 export const FavouriteController = {
   createFavourite,
+  deleteFavourite,
 };

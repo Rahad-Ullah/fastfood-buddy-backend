@@ -23,6 +23,23 @@ const createFavourite = async (payload: IFavourite) => {
   return result;
 };
 
+// -------------- delete favourite --------------
+const deleteFavourite = async (id: string) => {
+  // check favourite exists
+  const existingFavourite = await Favourite.exists({ _id: id });
+  if (!existingFavourite) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Favourite does not exist');
+  }
+  
+  const result = await Favourite.findByIdAndUpdate(
+    id,
+    { isFavourite: false },
+    { new: true }
+  ).populate('food', 'name');
+  return result;
+};
+
 export const FavouriteServices = {
   createFavourite,
+  deleteFavourite,
 };

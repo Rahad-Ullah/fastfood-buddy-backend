@@ -14,4 +14,11 @@ router.post(
   FavouriteController.createFavourite
 );
 
+// delete favourite
+router.delete(
+  '/:id',
+  auth(),
+  FavouriteController.deleteFavourite
+);
+
 export const favouriteRoutes = router;
