@@ -6,6 +6,7 @@ import { foodRoutes } from '../app/modules/food/food.route';
 import { favouriteRoutes } from '../app/modules/favourite/favourite.route';
 import { historyRoutes } from '../app/modules/history/history.route';
 import { noteRoutes } from '../app/modules/note/note.route';
+import { ratingRoutes } from '../app/modules/rating/rating.route';
 const router = express.Router();
 
 const apiRoutes: { path: string; route: any }[] = [
@@ -33,6 +34,10 @@ const apiRoutes: { path: string; route: any }[] = [
   {
     path: '/notes',
     route: noteRoutes,
+  },
+  {
+    path: '/ratings',
+    route: ratingRoutes,
   },
 ];
 

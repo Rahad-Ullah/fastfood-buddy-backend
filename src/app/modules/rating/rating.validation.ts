@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const ratingSchema = z.object({
   body: z
     .object({
-      rating: z.number().nonnegative(),
+      stars: z.number().nonnegative(),
     })
     .strict(),
 });
