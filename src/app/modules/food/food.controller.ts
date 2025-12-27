@@ -52,9 +52,23 @@ const getSingleFood = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// -------------- get all foods --------------
+const getAllFoods = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodServices.getAllFoods(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Foods fetched successfully',
+    data: result.data,
+    pagination: result.pagination,
+  });
+});
+
 export const FoodController = {
   createFood,
   updateFood,
   deleteFood,
   getSingleFood,
+  getAllFoods,
 };

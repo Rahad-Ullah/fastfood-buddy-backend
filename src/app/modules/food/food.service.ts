@@ -3,6 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { IFood } from './food.interface';
 import { Food } from './food.model';
 import { Restaurant } from '../restaurant/restaurant.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // -------------- create food --------------
 export const createFood = async (payload: IFood): Promise<IFood> => {
@@ -54,7 +55,7 @@ export const deleteFood = async (id: string) => {
   if (!existingFood) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Food not found');
   }
-  
+
   const result = await Food.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -69,9 +70,30 @@ export const getSingleFoodById = async (id: string) => {
   return result;
 };
 
+// -------------- get all food --------------
+export const getAllFoods = async (query: Record<string, unknown>) => {
+  const foodQuery = new QueryBuilder(
+    Food.find().populate('restaurant', 'name logo'),
+    query
+  )
+    .search(['name'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const [data, pagination] = await Promise.all([
+    foodQuery.modelQuery.lean(),
+    foodQuery.getPaginationInfo(),
+  ]);
+
+  return { data, pagination };
+};
+
 export const FoodServices = {
   createFood,
   updateFood,
   deleteFood,
   getSingleFoodById,
+  getAllFoods,
 };

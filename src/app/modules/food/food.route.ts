@@ -33,4 +33,7 @@ router.delete(
 // get single food route
 router.get('/:id', auth(), FoodController.getSingleFood);
 
+// get all foods route
+router.get('/', auth(), FoodController.getAllFoods);
+
 export const foodRoutes = router;
