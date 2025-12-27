@@ -22,6 +22,19 @@ export const createSupport = async (payload: ISupport): Promise<ISupport> => {
   return result;
 };
 
+// ----------- update support -----------
+export const updateSupport = async (id: string, payload: Partial<ISupport>): Promise<ISupport> => {
+  // check if support exists
+  const existingSupport = await Support.exists({ _id: id });
+  if (!existingSupport) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Support not found');
+  }
+  
+  const result = await Support.findByIdAndUpdate(id, payload, { new: true });
+  return result!;
+};
+
 export const SupportServices = {
   createSupport,
+  updateSupport,
 };

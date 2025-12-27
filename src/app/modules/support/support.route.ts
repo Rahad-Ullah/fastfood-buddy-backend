@@ -15,4 +15,12 @@ router.post(
   SupportController.createSupport
 );
 
+// update support
+router.patch(
+  '/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  validateRequest(SupportValidations.updateSupportSchema),
+  SupportController.updateSupport
+);
+
 export const supportRoutes = router;
