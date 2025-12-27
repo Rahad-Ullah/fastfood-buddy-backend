@@ -30,4 +30,7 @@ router.delete(
   FoodController.deleteFood
 );
 
+// get single food route
+router.get('/:id', auth(), FoodController.getSingleFood);
+
 export const foodRoutes = router;

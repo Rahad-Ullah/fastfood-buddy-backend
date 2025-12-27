@@ -63,8 +63,15 @@ export const deleteFood = async (id: string) => {
   return result;
 };
 
+// get single food by id
+export const getSingleFoodById = async (id: string) => {
+  const result = await Food.findById(id).populate('restaurant', 'name logo');
+  return result;
+};
+
 export const FoodServices = {
   createFood,
   updateFood,
   deleteFood,
+  getSingleFoodById,
 };

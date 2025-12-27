@@ -40,8 +40,21 @@ const deleteFood = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// -------------- get single food --------------
+const getSingleFood = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodServices.getSingleFoodById(req.params.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Food fetched successfully',
+    data: result,
+  });
+});
+
 export const FoodController = {
   createFood,
   updateFood,
   deleteFood,
+  getSingleFood,
 };
