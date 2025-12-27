@@ -8,6 +8,7 @@ import { historyRoutes } from '../app/modules/history/history.route';
 import { noteRoutes } from '../app/modules/note/note.route';
 import { ratingRoutes } from '../app/modules/rating/rating.route';
 import { supportRoutes } from '../app/modules/support/support.route';
+import { contactRoutes } from '../app/modules/contact/contact.route';
 const router = express.Router();
 
 const apiRoutes: { path: string; route: any }[] = [
@@ -43,6 +44,10 @@ const apiRoutes: { path: string; route: any }[] = [
   {
     path: '/supports',
     route: supportRoutes,
+  },
+  {
+    path: '/contact',
+    route: contactRoutes,
   },
 ];
 
