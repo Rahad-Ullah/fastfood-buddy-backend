@@ -3,6 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { Food } from '../food/food.model';
 import { IFavourite } from './favourite.interface';
 import { Favourite } from './favourite.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // -------------- create favourite --------------
 const createFavourite = async (payload: IFavourite) => {
@@ -30,7 +31,7 @@ const deleteFavourite = async (id: string) => {
   if (!existingFavourite) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Favourite does not exist');
   }
-  
+
   const result = await Favourite.findByIdAndUpdate(
     id,
     { isFavourite: false },
@@ -39,7 +40,30 @@ const deleteFavourite = async (id: string) => {
   return result;
 };
 
+// get all favourites by user id
+const getAllFavouritesByUserId = async (
+  id: string,
+  query: Record<string, unknown>
+) => {
+  const favouriteQuery = new QueryBuilder(
+    Favourite.find({ user: id, isFavourite: true })
+      .sort({ updatedAt: -1 })
+      .populate('food', 'name category'),
+    query
+  )
+    .paginate()
+    .fields();
+
+  const [data, pagination] = await Promise.all([
+    favouriteQuery.modelQuery.lean(),
+    favouriteQuery.getPaginationInfo(),
+  ]);
+
+  return { data, pagination };
+};
+
 export const FavouriteServices = {
   createFavourite,
   deleteFavourite,
+  getAllFavouritesByUserId,
 };
