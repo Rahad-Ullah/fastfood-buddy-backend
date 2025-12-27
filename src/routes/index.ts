@@ -10,9 +10,14 @@ import { ratingRoutes } from '../app/modules/rating/rating.route';
 import { supportRoutes } from '../app/modules/support/support.route';
 import { contactRoutes } from '../app/modules/contact/contact.route';
 import { disclaimerRoutes } from '../app/modules/disclaimer/disclaimer.route';
+import { analyticsRoutes } from '../app/modules/analytics/analytics.route';
 const router = express.Router();
 
 const apiRoutes: { path: string; route: any }[] = [
+  {
+    path: '/analytics',
+    route: analyticsRoutes,
+  },
   {
     path: '/users',
     route: UserRoutes,
