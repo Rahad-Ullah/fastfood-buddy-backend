@@ -19,6 +19,20 @@ const createRating = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all ratings
+const getAllRatings = catchAsync(async (req: Request, res: Response) => {
+  const result = await RatingServices.getAllRatings(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Ratings retrieved successfully',
+    data: result.data,
+    pagination: result.pagination,
+  });
+});
+
 export const RatingController = {
   createRating,
+  getAllRatings,
 };

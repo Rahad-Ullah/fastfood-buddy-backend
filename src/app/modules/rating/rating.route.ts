@@ -15,4 +15,7 @@ router.post(
   RatingController.createRating
 );
 
+// get all ratings
+router.get('/', auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN), RatingController.getAllRatings);
+
 export const ratingRoutes = router;

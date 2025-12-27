@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import { IRating } from './rating.interface';
 import { Rating } from './rating.model';
 
@@ -16,6 +17,26 @@ export const createRating = async (payload: IRating): Promise<IRating> => {
   return result;
 };
 
+// ------------- get all ratings -------------
+const getAllRatings = async (query: Record<string, unknown>) => {
+  const ratingQuery = new QueryBuilder(
+    Rating.find().populate('user', 'name email image'),
+    query
+  )
+    .filter()
+    .paginate()
+    .sort()
+    .fields();
+
+  const [data, pagination] = await Promise.all([
+    ratingQuery.modelQuery.lean(),
+    ratingQuery.getPaginationInfo(),
+  ]);
+
+  return { data, pagination };
+};
+
 export const RatingServices = {
   createRating,
+  getAllRatings,
 };
