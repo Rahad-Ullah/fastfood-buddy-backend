@@ -16,7 +16,7 @@ const favouriteSchema = new Schema<IFavourite, FavouriteModel>(
       index: true,
     },
     note: { type: String, default: '' },
-    isDeleted: { type: Boolean, default: false },
+    isFavourite: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

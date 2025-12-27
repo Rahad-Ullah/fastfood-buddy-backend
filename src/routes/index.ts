@@ -3,6 +3,7 @@ import express from 'express';
 import { AuthRoutes } from '../app/modules/auth/auth.route';
 import { UserRoutes } from '../app/modules/user/user.route';
 import { foodRoutes } from '../app/modules/food/food.route';
+import { favouriteRoutes } from '../app/modules/favourite/favourite.route';
 const router = express.Router();
 
 const apiRoutes: { path: string; route: any }[] = [
@@ -18,6 +19,10 @@ const apiRoutes: { path: string; route: any }[] = [
   {
     path: '/foods',
     route: foodRoutes,
+  },
+  {
+    path: '/favourites',
+    route: favouriteRoutes,
   },
 ];
 

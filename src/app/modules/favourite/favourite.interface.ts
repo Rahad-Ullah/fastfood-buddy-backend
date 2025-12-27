@@ -5,7 +5,7 @@ export interface IFavourite {
   user: Types.ObjectId;
   food: Types.ObjectId;
   note: string;
-  isDeleted: boolean;
+  isFavourite: boolean;
 }
 
 export type FavouriteModel = Model<IFavourite>;

@@ -1,8 +1,17 @@
 import express from 'express';
 import { FavouriteController } from './favourite.controller';
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { FavouriteValidations } from './favourite.validation';
 
 const router = express.Router();
 
-router.get('/', FavouriteController);
+// create favourite
+router.post(
+  '/create',
+  auth(),
+  validateRequest(FavouriteValidations.favouriteSchema),
+  FavouriteController.createFavourite
+);
 
 export const favouriteRoutes = router;
