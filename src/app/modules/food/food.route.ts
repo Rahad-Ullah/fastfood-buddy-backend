@@ -15,4 +15,12 @@ router.post(
   FoodController.createFood
 );
 
+// update food route
+router.patch(
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  validateRequest(FoodValidations.createFoodSchema),
+  FoodController.updateFood
+);
+
 export const foodRoutes = router;
