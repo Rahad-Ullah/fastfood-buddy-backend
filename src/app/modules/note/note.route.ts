@@ -15,4 +15,11 @@ router.post(
   NoteController.createNote
 );
 
+// get note by user id
+router.get(
+  '/me',
+  auth(USER_ROLES.USER),
+  NoteController.getMyNote
+);
+
 export const noteRoutes = router;

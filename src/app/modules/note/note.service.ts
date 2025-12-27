@@ -11,6 +11,13 @@ export const createNote = async (payload: INote): Promise<INote> => {
   return result;
 };
 
+// ------------- get note by user id -------------
+export const getNoteByUserId = async (id: string) => {
+  const result = await Note.findOne({ user: id });
+  return result;
+}
+
 export const NoteServices = {
   createNote,
+  getNoteByUserId,
 };
