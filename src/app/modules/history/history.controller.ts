@@ -31,7 +31,21 @@ const deleteHistory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get my history
+const getMyHistory = catchAsync(async (req: Request, res: Response) => {
+  const result = await HistoryServices.getHistoryByUserId(req.user?.id, req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'History retrieved successfully',
+    data: result.data,
+    pagination: result.pagination,
+  });
+});
+
 export const HistoryController = {
   createHistory,
   deleteHistory,
+  getMyHistory,
 };

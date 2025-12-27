@@ -22,4 +22,7 @@ router.delete(
   HistoryController.deleteHistory
 );
 
+// get my history
+router.get('/me', auth(USER_ROLES.USER), HistoryController.getMyHistory);
+
 export const historyRoutes = router;
