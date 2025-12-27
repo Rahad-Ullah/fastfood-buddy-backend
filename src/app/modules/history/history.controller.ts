@@ -19,6 +19,19 @@ const createHistory = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// delete history
+const deleteHistory = catchAsync(async (req: Request, res: Response) => {
+  const result = await HistoryServices.deleteHistory(req.params.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'History deleted successfully',
+    data: result,
+  });
+});
+
 export const HistoryController = {
   createHistory,
+  deleteHistory,
 };

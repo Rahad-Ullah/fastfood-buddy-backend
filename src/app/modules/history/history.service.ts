@@ -14,6 +14,23 @@ export const createHistory = async (payload: IHistory): Promise<IHistory> => {
   return result;
 };
 
+// -------------- delete history --------------
+export const deleteHistory = async (id: string) => {
+  // check history exists
+  const existingHistory = await History.exists({ _id: id });
+  if (!existingHistory) {
+    throw new Error('History does not exist');
+  }
+  
+  const result = await History.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  );
+  return result;
+};
+
 export const HistoryServices = {
   createHistory,
+  deleteHistory,
 };

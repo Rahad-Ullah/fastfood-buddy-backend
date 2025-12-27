@@ -15,4 +15,11 @@ router.post(
   HistoryController.createHistory
 );
 
+// delete history
+router.delete(
+  '/:id',
+  auth(USER_ROLES.USER),
+  HistoryController.deleteHistory
+);
+
 export const historyRoutes = router;
