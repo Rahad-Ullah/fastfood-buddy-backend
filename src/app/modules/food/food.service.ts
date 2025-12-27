@@ -47,7 +47,24 @@ export const updateFood = async (id: string, payload: Partial<IFood>) => {
   return result;
 };
 
+// -------------- delete food --------------
+export const deleteFood = async (id: string) => {
+  // check if food exists
+  const existingFood = await Food.exists({ _id: id });
+  if (!existingFood) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Food not found');
+  }
+  
+  const result = await Food.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  );
+  return result;
+};
+
 export const FoodServices = {
   createFood,
   updateFood,
+  deleteFood,
 };

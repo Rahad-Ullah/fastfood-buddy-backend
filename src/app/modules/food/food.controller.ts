@@ -28,7 +28,20 @@ const updateFood = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// -------------- delete food --------------
+const deleteFood = catchAsync(async (req: Request, res: Response) => {
+  const result = await FoodServices.deleteFood(req.params.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Food deleted successfully',
+    data: result,
+  });
+});
+
 export const FoodController = {
   createFood,
   updateFood,
+  deleteFood,
 };

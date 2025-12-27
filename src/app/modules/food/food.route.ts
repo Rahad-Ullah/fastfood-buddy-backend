@@ -23,4 +23,11 @@ router.patch(
   FoodController.updateFood
 );
 
+// delete food route
+router.delete(
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  FoodController.deleteFood
+);
+
 export const foodRoutes = router;
