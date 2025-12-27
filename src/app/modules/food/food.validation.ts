@@ -11,17 +11,21 @@ export const TypicalServingSchema = z
   .strict();
 
 export const createFoodSchema = z.object({
-  name: z.string().nonempty('Name cannot be empty'),
-  category: z.nativeEnum(FoodCategory),
-  restaurant: z
-    .string()
-    .length(24, 'Invalid restaurant ID')
-    .nonempty('Restaurant ID cannot be empty'),
-  fact: z.string().nonempty('Fact cannot be empty'),
-  reason: z.string().nonempty('Reason cannot be empty'),
-  absorption: z.string().nonempty('Absorption cannot be empty'),
-  description: z.string().nonempty('Description cannot be empty'),
-  typicalServing: TypicalServingSchema,
+  body: z
+    .object({
+      name: z.string().nonempty('Name cannot be empty'),
+      category: z.nativeEnum(FoodCategory),
+      restaurant: z
+        .string()
+        .length(24, 'Invalid restaurant ID')
+        .nonempty('Restaurant ID cannot be empty'),
+      fact: z.string().nonempty('Fact cannot be empty'),
+      reason: z.string().nonempty('Reason cannot be empty'),
+      absorption: z.string().nonempty('Absorption cannot be empty'),
+      description: z.string().nonempty('Description cannot be empty'),
+      typicalServing: TypicalServingSchema,
+    })
+    .strict(),
 });
 
 export const FoodValidations = {
