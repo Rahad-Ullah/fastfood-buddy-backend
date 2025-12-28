@@ -25,4 +25,10 @@ export default {
     email: process.env.SUPER_ADMIN_EMAIL,
     password: process.env.SUPER_ADMIN_PASSWORD,
   },
+  google: {
+    package_name: process.env.GOOGLE_PACKAGE_NAME,
+  },
+  apple: {
+    bundle_id: process.env.APPLE_BUNDLE_ID,
+  },
 };
