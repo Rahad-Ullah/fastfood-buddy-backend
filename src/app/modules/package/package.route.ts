@@ -23,4 +23,11 @@ router.patch(
   PackageController.updatePackage
 );
 
+// delete package
+router.delete(
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  PackageController.deletePackage
+);
+
 export const PackageRoutes = router;
