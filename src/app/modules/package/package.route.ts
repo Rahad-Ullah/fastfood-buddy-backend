@@ -15,4 +15,12 @@ router.post(
   PackageController.createPackage
 );
 
+// update package
+router.patch(
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  validateRequest(PackageValidation.updatePackageSchema),
+  PackageController.updatePackage
+);
+
 export const PackageRoutes = router;
