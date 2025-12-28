@@ -1,28 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { Package } from '../package/package.model';
-import { SubscriptionStatus } from './subscription.constants';
 import { ISubscription } from './subscription.interface';
 import { Subscription } from './subscription.model';
 import {
-  GoogleVerificationResult,
+  verifyAppleReceipt,
   verifyGooglePurchase,
-} from '../../../helpers/paymentVerifyHelper';
-
-async function verifyAppleReceipt(
-  transactionReceipt: string,
-  productId: string
-) {
-  // Call Apple App Store Server API here
-  // Example: verifyTransaction / getTransactionInfo
-  return {
-    valid: true,
-    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // +30 days
-    status: SubscriptionStatus.ACTIVE,
-    transactionId: '1234567890',
-    originalTransactionId: '1234567890',
-  };
-}
+} from '../../../helpers/purchaseVerifyHelper';
+import {
+  AppleVerificationResult,
+  GoogleVerificationResult,
+} from '../../../types/purchase';
 
 export const createSubscriptionIntoDB = async (
   payload: Partial<ISubscription> & { transactionReceipt?: string }
@@ -33,7 +21,7 @@ export const createSubscriptionIntoDB = async (
     throw new Error('Package does not exist');
   }
 
-  let verificationResult: GoogleVerificationResult;
+  let verificationResult: GoogleVerificationResult & AppleVerificationResult;
 
   if (payload.platform === 'android') {
     if (!payload.purchaseToken) {
@@ -77,7 +65,7 @@ export const createSubscriptionIntoDB = async (
     return { success: false, message: 'Subscription verification failed' };
   }
 
-  const subscription = await Subscription.create({
+  const result = await Subscription.create({
     user: payload.user,
     package: payload.package,
     platform: payload.platform,
@@ -92,7 +80,7 @@ export const createSubscriptionIntoDB = async (
     expiresAt: verificationResult.expiresAt,
   });
 
-  return subscription;
+  return result;
 };
 
 export const SubscriptionServices = {
