@@ -6,8 +6,8 @@ import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
 
 const createPackage = catchAsync(async (req: Request, res: Response) => {
-    const { ...packageData } = req.body;
-    const result = await PackageService.createPackageIntoDB(packageData);
+    const result = await PackageService.createPackageIntoDB(req.body);
+    
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,

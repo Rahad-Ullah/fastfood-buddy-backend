@@ -1,35 +1,20 @@
 import { Types } from "mongoose";
 import { IPackage } from "./package.interface";
-import { Package } from "./package.model";
-import stripe from "../../../config/stripe";
+import { Package } from './package.model';
+import ApiError from '../../../errors/ApiError';
+import { StatusCodes } from 'http-status-codes';
 
-const createPackageIntoDB = async (data:IPackage)=>{
-    const product = await stripe.products.create({
-        name: data.name,
-        description: data.features.join(', '),
-    })
+export const createPackageIntoDB = async (payload: IPackage) => {
+  // check if package already exist
+  const existingPackage = await Package.exists({ name: payload.name });
+  if (existingPackage) {
+    throw new ApiError(StatusCodes.CONFLICT, 'Package already exists');
+  }
 
-    const price = await stripe.prices.create({
-        product: product.id,
-        unit_amount: data.price * 100,
-        currency: 'usd',
-        recurring: {
-            interval: data.recurring,
-        },
-    })
+  const result = await Package.create(payload);
+  return result;
+};
 
-    const payment_link = await stripe.paymentLinks.create({
-        line_items: [
-            {
-                price: price.id,
-                quantity: 1,
-            },
-        ],
-    })
-
-    const result = await Package.create({...data,priceId:price.id,payment_link:payment_link.url,product:product.id})
-    return result
-}
 
 const getAllPackagesFromDB = async (type?:string)=>{
     const result = await Package.find(type?{for:type,status:{$ne:'delete'}}:{status:{$ne:'delete'}})

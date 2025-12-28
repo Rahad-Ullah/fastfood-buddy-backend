@@ -11,6 +11,7 @@ import { supportRoutes } from '../app/modules/support/support.route';
 import { contactRoutes } from '../app/modules/contact/contact.route';
 import { disclaimerRoutes } from '../app/modules/disclaimer/disclaimer.route';
 import { analyticsRoutes } from '../app/modules/analytics/analytics.route';
+import { PackageRoutes } from '../app/modules/package/package.route';
 const router = express.Router();
 
 const apiRoutes: { path: string; route: any }[] = [
@@ -42,6 +43,10 @@ const apiRoutes: { path: string; route: any }[] = [
   {
     path: '/notes',
     route: noteRoutes,
+  },
+  {
+    path: '/packages',
+    route: PackageRoutes,
   },
   {
     path: '/ratings',
