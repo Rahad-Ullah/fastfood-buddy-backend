@@ -30,18 +30,7 @@ const updatePackage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllPackages = catchAsync(async (req: Request, res: Response) => {
-  const result = await PackageService.getAllPackagesFromDB(
-    req.query?.type as string
-  );
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: 'Packages fetched successfully',
-    data: result,
-  });
-});
-
+// delete package
 const deletePackage = catchAsync(async (req: Request, res: Response) => {
   const result = await PackageService.deletePackageFromDB(req.params.id);
 
@@ -49,6 +38,18 @@ const deletePackage = catchAsync(async (req: Request, res: Response) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Package deleted successfully',
+    data: result,
+  });
+});
+
+// get all packages
+const getAllPackages = catchAsync(async (req: Request, res: Response) => {
+  const result = await PackageService.getAllPackagesFromDB();
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Packages fetched successfully',
     data: result,
   });
 });

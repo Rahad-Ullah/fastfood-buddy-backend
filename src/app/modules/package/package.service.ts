@@ -58,10 +58,11 @@ const deletePackageFromDB = async (id: string) => {
   return result;
 };
 
-const getAllPackagesFromDB = async (type?:string)=>{
-    const result = await Package.find(type?{for:type,status:{$ne:'delete'}}:{status:{$ne:'delete'}})
-    return result
-}
+// ------------ get all packages --------------
+const getAllPackagesFromDB = async () => {
+  const result = await Package.find({ isDeleted: false });
+  return result;
+};
 
 export const PackageService = {
     createPackageIntoDB,
