@@ -9,6 +9,7 @@ export interface ISubscription {
   user: Types.ObjectId;
   package: Types.ObjectId;
   platform: SubscriptionPlatform;
+  price: number;
 
   // Store identifiers
   googleProductId?: string;

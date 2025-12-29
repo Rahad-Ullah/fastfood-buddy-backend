@@ -24,6 +24,7 @@ const subscriptionSchema = new Schema<ISubscription, SubscriptionModel>(
       enum: Object.values(SubscriptionPlatform),
       required: true,
     },
+    price: { type: Number, required: true },
 
     googleProductId: { type: String },
     appleProductId: { type: String },

@@ -11,6 +11,7 @@ import {
   AppleVerificationResult,
   GoogleVerificationResult,
 } from '../../../types/purchase';
+import { SubscriptionPlatform } from './subscription.constants';
 
 export const createSubscriptionIntoDB = async (
   payload: Partial<ISubscription> & { transactionReceipt?: string }
@@ -23,7 +24,7 @@ export const createSubscriptionIntoDB = async (
 
   let verificationResult: GoogleVerificationResult & AppleVerificationResult;
 
-  if (payload.platform === 'android') {
+  if (payload.platform === SubscriptionPlatform.GOOGLE) {
     if (!payload.purchaseToken) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
@@ -40,7 +41,7 @@ export const createSubscriptionIntoDB = async (
       payload.purchaseToken,
       pkg.googleProductId
     );
-  } else if (payload.platform === 'ios') {
+  } else if (payload.platform === SubscriptionPlatform.APPLE) {
     if (!payload.transactionReceipt) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
@@ -69,6 +70,7 @@ export const createSubscriptionIntoDB = async (
     user: payload.user,
     package: payload.package,
     platform: payload.platform,
+    price: pkg.price,
     googleProductId: pkg.googleProductId,
     appleProductId: pkg.appleProductId,
     purchaseToken: payload.purchaseToken,

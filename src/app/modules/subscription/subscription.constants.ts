@@ -1,6 +1,6 @@
 export enum SubscriptionPlatform {
-  ANDROID = 'android',
-  IOS = 'ios',
+  GOOGLE = 'google',
+  APPLE = 'apple',
 }
 
 export enum SubscriptionStatus {
