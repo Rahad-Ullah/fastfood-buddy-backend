@@ -49,7 +49,34 @@ const updateFoodSchema = z.object({
     .strict(),
 });
 
+export const foodSchema = z.object({
+  name: z.string().nonempty('Name cannot be empty'),
+  category: z.nativeEnum(FoodCategory),
+  impactSpeed: z.nativeEnum(ImpactSpeed),
+  digestionSpeed: z.nativeEnum(DigestionSpeed),
+  spike: z.string().nonempty('Spike cannot be empty'),
+  fact: z.string().nonempty('Fact cannot be empty'),
+  reason: z.string().nonempty('Reason cannot be empty'),
+  absorption: z.string().nonempty('Absorption cannot be empty'),
+  description: z.string().nonempty('Description cannot be empty'),
+  typicalServing: TypicalServingSchema,
+});
+
+export const bulkFoodSchema = z.array(foodSchema);
+
+const importFoodsSchema = z.object({
+  body: z
+    .object({
+      restaurant: z.string().length(24, 'Invalid restaurant ID'),
+      doc: z.any(),
+    })
+    .strict(),
+});
+
 export const FoodValidations = {
   createFoodSchema,
   updateFoodSchema,
+  importFoodsSchema,
+  foodSchema,
+  bulkFoodSchema,
 };

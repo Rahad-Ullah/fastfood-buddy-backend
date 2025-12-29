@@ -33,6 +33,9 @@ const fileUploadHandler = (): RequestHandler => {
         case 'doc':
           uploadDir = path.join(baseUploadDir, 'doc');
           break;
+        case 'data':
+          uploadDir = path.join(baseUploadDir, 'data');
+          break;
         default:
           throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
       }
@@ -82,10 +85,16 @@ const fileUploadHandler = (): RequestHandler => {
         );
       }
     } else if (file.fieldname === 'doc') {
-      if (file.mimetype === 'application/pdf') {
+      if (['application/pdf'].includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only pdf supported'));
+        cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .pdf file supported'));
+      }
+    } else if (file.fieldname === 'data') {
+      if (['application/json'].includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .json file supported'));
       }
     } else {
       cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'));
@@ -99,6 +108,7 @@ const fileUploadHandler = (): RequestHandler => {
     { name: 'image', maxCount: 3 },
     { name: 'media', maxCount: 3 },
     { name: 'doc', maxCount: 3 },
+    { name: 'data', maxCount: 1 },
   ]);
 
   // wrap Multer upload in a proper Express RequestHandler
