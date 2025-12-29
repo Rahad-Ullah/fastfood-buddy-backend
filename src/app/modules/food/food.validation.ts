@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FoodCategory } from './food.constants';
+import { DigestionSpeed, FoodCategory, ImpactSpeed } from './food.constants';
 
 export const TypicalServingSchema = z
   .object({
@@ -19,6 +19,9 @@ export const createFoodSchema = z.object({
         .string()
         .length(24, 'Invalid restaurant ID')
         .nonempty('Restaurant ID cannot be empty'),
+      impactSpeed: z.nativeEnum(ImpactSpeed),
+      digestionSpeed: z.nativeEnum(DigestionSpeed),
+      spike: z.string().nonempty('Spike cannot be empty'),
       fact: z.string().nonempty('Fact cannot be empty'),
       reason: z.string().nonempty('Reason cannot be empty'),
       absorption: z.string().nonempty('Absorption cannot be empty'),

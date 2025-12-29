@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IFood, FoodModel } from './food.interface';
-import { FoodCategory } from './food.constants';
+import { DigestionSpeed, FoodCategory, ImpactSpeed } from './food.constants';
 
 const foodSchema = new Schema<IFood, FoodModel>(
   {
@@ -16,6 +16,17 @@ const foodSchema = new Schema<IFood, FoodModel>(
       required: true,
       index: true,
     },
+    impactSpeed: {
+      type: String,
+      enum: Object.values(ImpactSpeed),
+      required: true,
+    },
+    digestionSpeed: {
+      type: String,
+      enum: Object.values(DigestionSpeed),
+      required: true,
+    },
+    spike: { type: String, required: true },
     fact: { type: String, required: true },
     reason: { type: String, required: true },
     absorption: { type: String, required: true },

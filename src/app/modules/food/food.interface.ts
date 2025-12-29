@@ -1,5 +1,5 @@
 import { Model, Types } from 'mongoose';
-import { FoodCategory } from './food.constants';
+import { DigestionSpeed, FoodCategory, ImpactSpeed } from './food.constants';
 
 export interface ITypicalServing {
   carbs: number;
@@ -13,6 +13,9 @@ export interface IFood {
   name: string;
   category: FoodCategory;
   restaurant: Types.ObjectId;
+  impactSpeed: ImpactSpeed;
+  digestionSpeed: DigestionSpeed;
+  spike: string;
   fact: string;
   reason: string;
   absorption: string;
