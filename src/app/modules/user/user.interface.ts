@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { USER_ROLES, USER_STATUS } from './user.constant';
 
 export type IUser = {
@@ -7,6 +7,7 @@ export type IUser = {
   email: string;
   password: string;
   image?: string;
+  subscription?: Types.ObjectId;
   status: USER_STATUS;
   isVerified: boolean;
   isDeleted: boolean;

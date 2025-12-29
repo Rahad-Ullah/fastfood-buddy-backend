@@ -12,6 +12,7 @@ import {
   GoogleVerificationResult,
 } from '../../../types/purchase';
 import { SubscriptionPlatform } from './subscription.constants';
+import { User } from '../user/user.model';
 
 export const createSubscriptionIntoDB = async (
   payload: Partial<ISubscription> & { transactionReceipt?: string }
@@ -66,7 +67,7 @@ export const createSubscriptionIntoDB = async (
     return { success: false, message: 'Subscription verification failed' };
   }
 
-  const result = await Subscription.create({
+  const subscription = await Subscription.create({
     user: payload.user,
     package: payload.package,
     platform: payload.platform,
@@ -82,7 +83,19 @@ export const createSubscriptionIntoDB = async (
     expiresAt: verificationResult.expiresAt,
   });
 
-  return result;
+  if (!subscription) {
+    throw new ApiError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Failed to create subscription'
+    );
+  }
+
+  // update user subscription
+  await User.findByIdAndUpdate(payload.user, {
+    subscription: subscription._id,
+  });
+
+  return subscription;
 };
 
 export const SubscriptionServices = {

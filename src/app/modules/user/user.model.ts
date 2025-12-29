@@ -33,6 +33,11 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       default: '',
     },
+    subscription: {
+      type: Schema.Types.ObjectId,
+      ref: 'Subscription',
+      default: null,
+    },
     status: {
       type: String,
       enum: Object.values(USER_STATUS),
