@@ -5,7 +5,7 @@ export interface GoogleVerificationResult {
   startedAt?: Date;
   expiresAt?: Date;
   status: SubscriptionStatus;
-  googleSubscriptionId?: string;
+  orderId?: string;
   linkedPurchaseToken?: string;
 }
 

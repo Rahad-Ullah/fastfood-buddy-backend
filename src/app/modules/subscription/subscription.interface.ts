@@ -11,12 +11,12 @@ export interface ISubscription {
   platform: SubscriptionPlatform;
 
   // Store identifiers
-  androidProductId?: string;
-  iosProductId?: string;
+  googleProductId?: string;
+  appleProductId?: string;
 
   // Store subscription IDs
   purchaseToken?: string; // Google Play
-  googleSubscriptionId?: string; // Google SKU
+  orderId?: string; // Google SKU
   transactionId?: string; // Apple transactionId
   originalTransactionId?: string; // Apple originalTransactionId
 

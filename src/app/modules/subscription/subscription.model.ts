@@ -25,11 +25,11 @@ const subscriptionSchema = new Schema<ISubscription, SubscriptionModel>(
       required: true,
     },
 
-    androidProductId: { type: String },
-    iosProductId: { type: String },
+    googleProductId: { type: String },
+    appleProductId: { type: String },
 
     purchaseToken: { type: String },
-    googleSubscriptionId: { type: String },
+    orderId: { type: String },
     transactionId: { type: String },
     originalTransactionId: { type: String },
 

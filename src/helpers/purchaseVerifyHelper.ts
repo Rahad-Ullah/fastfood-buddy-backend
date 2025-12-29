@@ -55,7 +55,7 @@ export async function verifyGooglePurchase(
       startedAt,
       expiresAt,
       status,
-      googleSubscriptionId: data.orderId, // unique across renewals
+      orderId: data.orderId, // unique across renewals
       linkedPurchaseToken: data.linkedPurchaseToken, // optional, useful for upgrades/downgrades
     };
   } catch (error: any) {
