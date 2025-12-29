@@ -1,5 +1,4 @@
-import { Types } from "mongoose";
-import { IPackage } from "./package.interface";
+import { IPackage } from './package.interface';
 import { Package } from './package.model';
 import ApiError from '../../../errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
@@ -65,8 +64,8 @@ const getAllPackagesFromDB = async () => {
 };
 
 export const PackageService = {
-    createPackageIntoDB,
-    getAllPackagesFromDB,
-    updatePackageIntoDB,
-    deletePackageFromDB
-}
+  createPackageIntoDB,
+  getAllPackagesFromDB,
+  updatePackageIntoDB,
+  deletePackageFromDB,
+};

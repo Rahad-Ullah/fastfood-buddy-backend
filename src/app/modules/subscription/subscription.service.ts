@@ -30,7 +30,7 @@ export const createSubscriptionIntoDB = async (
         'Purchase token is required for Google Play subscriptions'
       );
     }
-    if (!pkg.androidProductId) {
+    if (!pkg.googleProductId) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
         'Google Play product id is required for Google Play subscriptions'
@@ -38,7 +38,7 @@ export const createSubscriptionIntoDB = async (
     }
     verificationResult = await verifyGooglePurchase(
       payload.purchaseToken,
-      pkg.androidProductId
+      pkg.googleProductId
     );
   } else if (payload.platform === 'ios') {
     if (!payload.transactionReceipt) {
@@ -47,7 +47,7 @@ export const createSubscriptionIntoDB = async (
         'Transaction receipt is required for Apple subscriptions'
       );
     }
-    if (!pkg.iosProductId) {
+    if (!pkg.appleProductId) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
         'Apple product id is required for Apple subscriptions'
@@ -55,7 +55,7 @@ export const createSubscriptionIntoDB = async (
     }
     verificationResult = await verifyAppleReceipt(
       payload.transactionReceipt,
-      pkg.iosProductId
+      pkg.appleProductId
     );
   } else {
     throw new Error('Unsupported platform');
@@ -69,8 +69,8 @@ export const createSubscriptionIntoDB = async (
     user: payload.user,
     package: payload.package,
     platform: payload.platform,
-    googleProductId: pkg.androidProductId,
-    appleProductId: pkg.iosProductId,
+    googleProductId: pkg.googleProductId,
+    appleProductId: pkg.appleProductId,
     purchaseToken: payload.purchaseToken,
     orderId: verificationResult.orderId,
     transactionId: verificationResult.transactionId,

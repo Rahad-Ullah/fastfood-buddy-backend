@@ -7,8 +7,8 @@ export interface IPackage {
   price?: number;
   features: string[];
   interval: PackageInterval;
-  androidProductId?: string; // Google Play SKU
-  iosProductId?: string; // App Store Product ID
+  googleProductId?: string; // Google Play SKU
+  appleProductId?: string; // App Store Product ID
   isDeleted: boolean;
 }
 

@@ -12,8 +12,8 @@ const packageSchema = new Schema<IPackage, PackageModel>(
       enum: Object.values(PackageInterval),
       default: PackageInterval.MONTH,
     },
-    androidProductId: { type: String, default: '' },
-    iosProductId: { type: String, default: '' },
+    googleProductId: { type: String, default: '' },
+    appleProductId: { type: String, default: '' },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
