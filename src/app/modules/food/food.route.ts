@@ -19,7 +19,7 @@ router.post(
 router.patch(
   '/:id',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  validateRequest(FoodValidations.createFoodSchema),
+  validateRequest(FoodValidations.updateFoodSchema),
   FoodController.updateFood
 );
 

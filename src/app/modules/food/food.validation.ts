@@ -10,7 +10,7 @@ export const TypicalServingSchema = z
   })
   .strict();
 
-export const createFoodSchema = z.object({
+const createFoodSchema = z.object({
   body: z
     .object({
       name: z.string().nonempty('Name cannot be empty'),
@@ -31,6 +31,25 @@ export const createFoodSchema = z.object({
     .strict(),
 });
 
+// update food schema
+const updateFoodSchema = z.object({
+  body: z
+    .object({
+      name: z.string().nonempty('Name cannot be empty').optional(),
+      category: z.nativeEnum(FoodCategory).optional(),
+      impactSpeed: z.nativeEnum(ImpactSpeed).optional(),
+      digestionSpeed: z.nativeEnum(DigestionSpeed).optional(),
+      spike: z.string().nonempty('Spike cannot be empty').optional(),
+      fact: z.string().nonempty('Fact cannot be empty').optional(),
+      reason: z.string().nonempty('Reason cannot be empty').optional(),
+      absorption: z.string().nonempty('Absorption cannot be empty').optional(),
+      description: z.string().nonempty('Description cannot be empty').optional(),
+      typicalServing: TypicalServingSchema.optional(),
+    })
+    .strict(),
+});
+
 export const FoodValidations = {
   createFoodSchema,
+  updateFoodSchema,
 };
