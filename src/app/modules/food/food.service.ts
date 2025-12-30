@@ -73,7 +73,7 @@ export const getSingleFoodById = async (id: string) => {
 // -------------- get all food --------------
 export const getAllFoods = async (query: Record<string, unknown>) => {
   const foodQuery = new QueryBuilder(
-    Food.find().populate('restaurant', 'name logo'),
+    Food.find({ isDeleted: false }).populate('restaurant', 'name logo'),
     query
   )
     .search(['name'])
