@@ -78,29 +78,38 @@ const importFoods = catchAsync(async (req: Request, res: Response) => {
   if (!file) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'JSON file is required');
   }
-
+  // check file type
   if (file.mimetype !== 'application/json') {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Only JSON files are allowed');
   }
-
+  // read file
   const rawData = fs.readFileSync(file.path, 'utf-8');
   const foods = JSON.parse(rawData);
+
   // unlink file
   if (filePath) unlinkFile(filePath);
 
+  // check if json is array
   if (!Array.isArray(foods)) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid JSON format');
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'Invalid JSON format, please check your JSON file'
+    );
   }
 
+  // check if json is empty
   if (foods.length === 0) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'JSON file is empty');
   }
+
+  // set max limit
   if (foods.length > 1000) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
       'JSON file is too large. Max 1000 items allowed'
     );
   }
+
   // zod validations
   if (FoodValidations.bulkFoodSchema.safeParse(foods).success === false) {
     throw new ApiError(

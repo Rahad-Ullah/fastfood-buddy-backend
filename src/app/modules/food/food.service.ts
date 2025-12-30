@@ -92,45 +92,49 @@ export const getAllFoods = async (query: Record<string, unknown>) => {
 
 // ------------ import food items ------------
 const importFoods = async (restaurantId: string, foods: Partial<IFood>[]) => {
-  // // 1. Check restaurant exists
-  // const restaurantExists = await Restaurant.exists({ _id: restaurantId });
-  // if (!restaurantExists) {
-  //   throw new ApiError(StatusCodes.NOT_FOUND, 'Restaurant not found');
-  // }
+  // 1. Check restaurant exists
+  const restaurantExists = await Restaurant.exists({ _id: restaurantId });
+  if (!restaurantExists) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Restaurant not found');
+  }
 
-  // // 2. Normalize names for comparison
-  // const foodNames = foods.map(f => f.name?.trim());
+  // 2. Normalize names for comparison
+  const foodNames = foods.map(f => f.name?.trim()).filter(Boolean) as string[];
 
-  // // 3. Find existing foods (single query)
-  // const existingFoods = await Food.find(
-  //   { name: { $in: foodNames } },
-  //   { name: 1 }
-  // ).lean();
+  // 3. Find existing foods (single query)
+  const existingFoods = await Food.find(
+    {
+      restaurant: restaurantId,
+      name: { $in: foodNames },
+    },
+    { name: 1 }
+  ).lean();
 
-  // const existingNameSet = new Set(existingFoods.map(f => f.name.toLowerCase()));
+  const existingNameSet = new Set(existingFoods.map(f => f.name.toLowerCase()));
 
-  // // 4. Filter new foods only
-  // const newFoods = foods
-  //   .filter(f => f.name && !existingNameSet.has(f.name.toLowerCase()))
-  //   .map(f => ({
-  //     ...f,
-  //     restaurant: restaurantId,
-  //   }));
+  // 4. Filter new foods only
+  const newFoods = foods
+    .filter(f => f.name && !existingNameSet.has(f.name.trim().toLowerCase()))
+    .map(f => ({
+      ...f,
+      name: f.name!.trim(),
+      restaurant: restaurantId,
+    }));
 
-  // if (newFoods.length === 0) {
-  //   throw new ApiError(StatusCodes.CONFLICT, 'All food items already exist');
-  // }
+  if (newFoods.length === 0) {
+    throw new ApiError(StatusCodes.CONFLICT, 'All food items already exist');
+  }
 
-  // // 5. Bulk insert (FAST)
-  // const insertedFoods = await Food.insertMany(newFoods, {
-  //   ordered: false, // continues even if one fails
-  // });
+  // 5. Bulk insert (FAST)
+  const insertedFoods = await Food.insertMany(newFoods, {
+    ordered: false, // continues even if one fails
+  });
 
-  // return {
-  //   totalCount: foods.length,
-  //   insertedCount: insertedFoods.length,
-  //   skippedCount: foods.length - insertedFoods.length,
-  // };
+  return {
+    totalCount: foods.length,
+    insertedCount: insertedFoods.length,
+    skippedCount: foods.length - insertedFoods.length,
+  };
 };
 
 export const FoodServices = {
