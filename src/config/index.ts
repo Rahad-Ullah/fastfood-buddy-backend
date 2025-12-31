@@ -33,5 +33,6 @@ export default {
     bundle_id: process.env.APPLE_BUNDLE_ID,
     shared_secret: process.env.APPLE_SHARED_SECRET,
     purchase_mode: process.env.APPLE_PURCHASE_MODE,
+    client_id: process.env.APPLE_CLIENT_ID,
   },
 };
