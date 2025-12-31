@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AuthProviderEnum } from '../authProvider/authProvider.constants';
 
 const createLoginZodSchema = z.object({
   body: z.object({
@@ -9,6 +10,16 @@ const createLoginZodSchema = z.object({
     password: z
       .string({ required_error: 'Password is required' })
       .nonempty("Password can't be empty!"),
+  }),
+});
+
+// social login schema
+const socialLoginZodSchema = z.object({
+  body: z.object({
+    provider: z.nativeEnum(AuthProviderEnum),
+    providerUserId: z.string().nonempty('Provider User ID is required'),
+    name: z.string().optional(),
+    email: z.string().email('Invalid email!').optional(),
   }),
 });
 
@@ -70,6 +81,7 @@ export const AuthValidation = {
   createVerifyEmailZodSchema,
   createForgetPasswordZodSchema,
   createLoginZodSchema,
+  socialLoginZodSchema,
   createResetPasswordZodSchema,
   createChangePasswordZodSchema,
 };

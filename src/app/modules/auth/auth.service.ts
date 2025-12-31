@@ -16,14 +16,20 @@ import cryptoToken from '../../../util/cryptoToken';
 import generateOTP from '../../../util/generateOTP';
 import { ResetToken } from '../resetToken/resetToken.model';
 import { User } from '../user/user.model';
-import { USER_STATUS } from '../user/user.constant';
+import { USER_ROLES, USER_STATUS } from '../user/user.constant';
+import { AuthProvider } from '../authProvider/authProvider.model';
 
 //------------------ login service ------------------
 const loginUserFromDB = async (payload: ILoginData) => {
   const { email, password } = payload;
   const isExistUser = await User.findOne({ email }).select('+password');
   if (!isExistUser) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, config.node_env === 'development' ? "User doesn't exist!" : 'Invalid email or password');
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      config.node_env === 'development'
+        ? "User doesn't exist!"
+        : 'Invalid email or password'
+    );
   }
 
   // check if user is deleted
@@ -52,7 +58,12 @@ const loginUserFromDB = async (payload: ILoginData) => {
 
   //check match password
   if (!(await User.isMatchPassword(password, isExistUser.password))) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, config.node_env === 'development' ? 'Password is incorrect!' : 'Invalid email or password');
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      config.node_env === 'development'
+        ? 'Password is incorrect!'
+        : 'Invalid email or password'
+    );
   }
 
   //create access token
@@ -69,7 +80,12 @@ const loginUserFromDB = async (payload: ILoginData) => {
 const forgetPasswordToDB = async (email: string) => {
   const isExistUser = await User.isExistUserByEmail(email);
   if (!isExistUser) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, config.node_env === 'development' ? "User doesn't exist!" : "Invalid email");
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      config.node_env === 'development'
+        ? "User doesn't exist!"
+        : 'Invalid email'
+    );
   }
 
   // check if user is deleted
@@ -272,10 +288,87 @@ const changePasswordToDB = async (
   await User.findOneAndUpdate({ _id: user.id }, updateData, { new: true });
 };
 
+// -------------- social login --------------
+const socialLogin = async ({
+  provider,
+  providerUserId,
+  email,
+  name,
+}: {
+  provider: 'google' | 'apple';
+  providerUserId: string;
+  email?: string;
+  name?: string;
+}) => {
+  // 1️⃣ Check social identity
+  const providerDoc = await AuthProvider.findOne({
+    provider,
+    providerUserId,
+  }).populate('user');
+
+  if (providerDoc) {
+    const user = providerDoc.user as any;
+
+    // update missing info
+    if (!user.email && email) user.email = email;
+    if (!user.name && name) user.name = name;
+
+    await user.save();
+
+    // create access token
+    const accessToken = jwtHelper.createToken(
+      {
+        _id: user._id,
+        role: user.role,
+      },
+      config.jwt.jwt_secret as Secret,
+      config.jwt.jwt_expire_in as string
+    );
+
+    return { accessToken, role: user.role };
+  }
+
+  // 2️⃣ Check email
+  let user = null;
+  if (email) {
+    user = await User.findOne({ email, isDeleted: false });
+  }
+
+  // 3️⃣ Create user if needed
+  if (!user) {
+    user = await User.create({
+      name: name || 'User',
+      email: email || '',
+      role: USER_ROLES.USER,
+      isVerified: Boolean(email),
+    });
+  }
+
+  // 4️⃣ Link provider
+  await AuthProvider.create({
+    user: user._id,
+    provider,
+    providerUserId,
+  });
+
+  // 5️⃣ create access token
+  const accessToken = jwtHelper.createToken(
+    {
+      _id: user._id,
+      role: user.role,
+    },
+    config.jwt.jwt_secret as Secret,
+    config.jwt.jwt_expire_in as string
+  );
+
+  return { accessToken, role: user.role };
+};
+
 export const AuthService = {
   verifyEmailToDB,
   loginUserFromDB,
   forgetPasswordToDB,
   resetPasswordToDB,
   changePasswordToDB,
+  socialLogin,
 };
