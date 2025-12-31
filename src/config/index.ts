@@ -27,6 +27,7 @@ export default {
   },
   google: {
     package_name: process.env.GOOGLE_PACKAGE_NAME,
+    client_id: process.env.GOOGLE_CLIENT_ID,
   },
   apple: {
     bundle_id: process.env.APPLE_BUNDLE_ID,
