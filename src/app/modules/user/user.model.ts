@@ -19,13 +19,12 @@ const userSchema = new Schema<IUser, UserModal>(
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
       lowercase: true,
+      unique: true,
+      sparse: true,
     },
     password: {
       type: String,
-      required: true,
       select: 0,
       minlength: 8,
     },
@@ -91,14 +90,10 @@ userSchema.statics.isMatchPassword = async (
   return await bcrypt.compare(password, hashPassword);
 };
 
-//check user
 userSchema.pre('save', async function (next) {
-  //check user
-  const isExist = await User.findOne({ email: this.email });
-  if (isExist) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exist!');
-  }
-
+  // check if password not exist or password not modified in this call
+  if (!this.password) return next();
+  if (!this.isModified('password')) return next();
   //password hash
   this.password = await bcrypt.hash(
     this.password,
