@@ -3,6 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { AuthService } from './auth.service';
+import { AuthProviderEnum } from '../authProvider/authProvider.constants';
+import { AuthHelper } from '../../../helpers/authHelper';
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   const { ...verifyData } = req.body;
@@ -68,7 +70,24 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 
 // social login
 const socialLogin = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.socialLogin(req.body);
+  const payload = req.body;
+  let providerVerifiedData: any;
+  if (payload.provider === AuthProviderEnum.GOOGLE) {
+    providerVerifiedData = await AuthHelper.verifyGoogleToken(
+      payload.providerUserId,
+    );
+  } else if (payload.provider === AuthProviderEnum.APPLE) {
+    providerVerifiedData = await AuthHelper.verifyAppleToken(
+      payload.providerUserId,
+    );
+  }
+
+  const result = await AuthService.socialLogin({
+    provider: payload.provider,
+    providerUserId: providerVerifiedData.providerUserId,
+    email: providerVerifiedData.email || '',
+    name: providerVerifiedData.name || '',
+  });
 
   sendResponse(res, {
     success: true,

@@ -315,23 +315,39 @@ const socialLogin = async ({
 
     await user.save();
 
+    // check user status
+    if (user && (user.isDeleted || user.status !== USER_STATUS.ACTIVE)) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        'It looks like your account has been deleted or deactivated.',
+      );
+    }
+
     // create access token
     const accessToken = jwtHelper.createToken(
       {
-        _id: user._id,
+        id: user._id,
         role: user.role,
       },
       config.jwt.jwt_secret as Secret,
-      config.jwt.jwt_expire_in as string
+      config.jwt.jwt_expire_in as string,
     );
 
-    return { accessToken, role: user.role };
+    return { accessToken, role: user.role, user };
   }
 
   // 2️⃣ Check email
   let user = null;
   if (email) {
-    user = await User.findOne({ email, isDeleted: false });
+    user = await User.findOne({ email });
+  }
+
+  // check user status
+  if (user && (user.isDeleted || user.status !== USER_STATUS.ACTIVE)) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'It looks like your account has been deleted or deactivated.',
+    );
   }
 
   // 3️⃣ Create user if needed
@@ -354,14 +370,14 @@ const socialLogin = async ({
   // 5️⃣ create access token
   const accessToken = jwtHelper.createToken(
     {
-      _id: user._id,
+      id: user._id,
       role: user.role,
     },
     config.jwt.jwt_secret as Secret,
-    config.jwt.jwt_expire_in as string
+    config.jwt.jwt_expire_in as string,
   );
 
-  return { accessToken, role: user.role };
+  return { accessToken, role: user.role, user };
 };
 
 export const AuthService = {

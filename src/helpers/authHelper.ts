@@ -3,12 +3,16 @@ import config from '../config';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
-const googleClient = new OAuth2Client(config.google.client_id);
+const googleClient = new OAuth2Client();
 
 export async function verifyGoogleToken(idToken: string) {
   const ticket = await googleClient.verifyIdToken({
     idToken,
-    audience: config.google.client_id,
+    audience: [
+      config.google.client_id_ios as string,
+      config.google.client_id_android as string,
+      config.google.client_id_web as string,
+    ],
   });
 
   const payload = ticket.getPayload();
@@ -56,7 +60,12 @@ export async function verifyAppleToken(identityToken: string) {
           email: decoded.email,
           emailVerified: decoded.email_verified === 'true',
         });
-      }
+      },
     );
   });
 }
+
+export const AuthHelper = {
+  verifyGoogleToken,
+  verifyAppleToken,
+};

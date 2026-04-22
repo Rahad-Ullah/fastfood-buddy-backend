@@ -27,12 +27,12 @@ export default {
   },
   google: {
     package_name: process.env.GOOGLE_PACKAGE_NAME,
-    client_id: process.env.GOOGLE_CLIENT_ID,
+    client_id_ios: process.env.GOOGLE_CLIENT_ID_IOS,
+    client_id_android: process.env.GOOGLE_CLIENT_ID_ANDROID,
+    client_id_web: process.env.GOOGLE_CLIENT_ID_WEB,
   },
   apple: {
-    bundle_id: process.env.APPLE_BUNDLE_ID,
-    shared_secret: process.env.APPLE_SHARED_SECRET,
-    purchase_mode: process.env.APPLE_PURCHASE_MODE,
     client_id: process.env.APPLE_CLIENT_ID,
+    shared_secret: process.env.APPLE_SHARED_SECRET,
   },
 };
