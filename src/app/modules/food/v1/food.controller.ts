@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { FoodServices } from './food.service';
-import catchAsync from '../../../shared/catchAsync';
-import sendResponse from '../../../shared/sendResponse';
+import catchAsync from '../../../../shared/catchAsync';
+import sendResponse from '../../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../../errors/ApiError';
+import ApiError from '../../../../errors/ApiError';
 import fs from 'fs';
-import { getSingleFilePath } from '../../../shared/getFilePath';
-import unlinkFile from '../../../shared/unlinkFile';
+import { getSingleFilePath } from '../../../../shared/getFilePath';
+import unlinkFile from '../../../../shared/unlinkFile';
 import { FoodValidations } from './food.validation';
 
 // -------------- create food controller --------------
@@ -93,7 +93,7 @@ const importFoods = catchAsync(async (req: Request, res: Response) => {
   if (!Array.isArray(foods)) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Invalid JSON format, please check your JSON file'
+      'Invalid JSON format, please check your JSON file',
     );
   }
 
@@ -106,7 +106,7 @@ const importFoods = catchAsync(async (req: Request, res: Response) => {
   if (foods.length > 1000) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'JSON file is too large. Max 1000 items allowed'
+      'JSON file is too large. Max 1000 items allowed',
     );
   }
 
@@ -114,7 +114,7 @@ const importFoods = catchAsync(async (req: Request, res: Response) => {
   if (FoodValidations.bulkFoodSchema.safeParse(foods).success === false) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Invalid JSON file format, please check your JSON file'
+      'Invalid JSON file format, please check your JSON file',
     );
   }
 

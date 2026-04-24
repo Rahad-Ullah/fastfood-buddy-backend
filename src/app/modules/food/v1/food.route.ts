@@ -1,10 +1,10 @@
 import express from 'express';
 import { FoodController } from './food.controller';
-import auth from '../../middlewares/auth';
-import { USER_ROLES } from '../user/user.constant';
-import validateRequest from '../../middlewares/validateRequest';
+import auth from '../../../middlewares/auth';
+import { USER_ROLES } from '../../user/user.constant';
+import validateRequest from '../../../middlewares/validateRequest';
 import { FoodValidations } from './food.validation';
-import fileUploadHandler from '../../middlewares/fileUploadHandler';
+import fileUploadHandler from '../../../middlewares/fileUploadHandler';
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.post(
   '/create',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
   validateRequest(FoodValidations.createFoodSchema),
-  FoodController.createFood
+  FoodController.createFood,
 );
 
 // update food route
@@ -21,14 +21,14 @@ router.patch(
   '/:id',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
   validateRequest(FoodValidations.updateFoodSchema),
-  FoodController.updateFood
+  FoodController.updateFood,
 );
 
 // delete food route
 router.delete(
   '/:id',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  FoodController.deleteFood
+  FoodController.deleteFood,
 );
 
 // get single food route
@@ -43,7 +43,7 @@ router.post(
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
   fileUploadHandler(),
   validateRequest(FoodValidations.importFoodsSchema),
-  FoodController.importFoods
+  FoodController.importFoods,
 );
 
 export const foodRoutes = router;

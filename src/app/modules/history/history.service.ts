@@ -1,5 +1,5 @@
 import QueryBuilder from '../../builder/QueryBuilder';
-import { Food } from '../food/food.model';
+import { Food } from '../food/shared/food.model';
 import { IHistory } from './history.interface';
 import { History } from './history.model';
 

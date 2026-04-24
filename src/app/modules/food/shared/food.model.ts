@@ -39,7 +39,7 @@ const foodSchema = new Schema<IFood, FoodModel>(
     },
     isDeleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Food = model<IFood, FoodModel>('Food', foodSchema);

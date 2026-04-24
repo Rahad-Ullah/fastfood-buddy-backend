@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../../errors/ApiError';
+import ApiError from '../../../../errors/ApiError';
 import { IFood } from './food.interface';
-import { Food } from './food.model';
-import { Restaurant } from '../restaurant/restaurant.model';
-import QueryBuilder from '../../builder/QueryBuilder';
+import { Food } from './../shared/food.model';
+import { Restaurant } from '../../restaurant/restaurant.model';
+import QueryBuilder from '../../../builder/QueryBuilder';
 // ! TODO: prevent duplicate food based on restaurant and food name. check restaurant exists at first
 // -------------- create food --------------
 export const createFood = async (payload: IFood): Promise<IFood> => {
@@ -59,7 +59,7 @@ export const deleteFood = async (id: string) => {
   const result = await Food.findByIdAndUpdate(
     id,
     { isDeleted: true },
-    { new: true }
+    { new: true },
   );
   return result;
 };
@@ -74,7 +74,7 @@ export const getSingleFoodById = async (id: string) => {
 export const getAllFoods = async (query: Record<string, unknown>) => {
   const foodQuery = new QueryBuilder(
     Food.find({ isDeleted: false }).populate('restaurant', 'name logo'),
-    query
+    query,
   )
     .search(['name'])
     .filter()
@@ -107,7 +107,7 @@ const importFoods = async (restaurantId: string, foods: Partial<IFood>[]) => {
       restaurant: restaurantId,
       name: { $in: foodNames },
     },
-    { name: 1 }
+    { name: 1 },
   ).lean();
 
   const existingNameSet = new Set(existingFoods.map(f => f.name.toLowerCase()));

@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
-import { Food } from '../food/food.model';
+import { Food } from '../food/shared/food.model';
 import { IFavourite } from './favourite.interface';
 import { Favourite } from './favourite.model';
 import QueryBuilder from '../../builder/QueryBuilder';

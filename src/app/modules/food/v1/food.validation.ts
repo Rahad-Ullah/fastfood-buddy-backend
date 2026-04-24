@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { DigestionSpeed, FoodCategory, ImpactSpeed } from './food.constants';
+import {
+  DigestionSpeed,
+  FoodCategory,
+  ImpactSpeed,
+} from '../shared/food.constants';
 
 export const TypicalServingSchema = z
   .object({
@@ -43,7 +47,10 @@ const updateFoodSchema = z.object({
       fact: z.string().nonempty('Fact cannot be empty').optional(),
       reason: z.string().nonempty('Reason cannot be empty').optional(),
       absorption: z.string().nonempty('Absorption cannot be empty').optional(),
-      description: z.string().nonempty('Description cannot be empty').optional(),
+      description: z
+        .string()
+        .nonempty('Description cannot be empty')
+        .optional(),
       typicalServing: TypicalServingSchema.optional(),
     })
     .strict(),
