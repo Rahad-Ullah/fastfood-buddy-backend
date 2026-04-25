@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { IntakeServices } from './intake.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -19,6 +19,19 @@ const createIntake = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// update intake
+const updateIntake = catchAsync(async (req: Request, res: Response) => {
+  const result = await IntakeServices.updateIntake(req.params.id, req.body);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Intake updated successfully',
+    data: result,
+  });
+});
+
 export const IntakeController = {
   createIntake,
+  updateIntake,
 };

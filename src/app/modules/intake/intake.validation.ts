@@ -17,6 +17,9 @@ export const createIntake = z.object({
 
 // update intake
 export const updateIntake = z.object({
+  params: z.object({
+    id: objectId('Intake'),
+  }),
   body: z
     .object({
       outcome: z.nativeEnum(IntakeOutcome).nullable().optional(),

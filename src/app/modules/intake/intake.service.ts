@@ -3,6 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { Food } from '../food/shared/food.model';
 import { IIntake } from './intake.interface';
 import { Intake } from './intake.model';
+import { IntakeStatus } from './intake.constants';
 
 // ------------- create intake ---------------
 export const createIntake = async (
@@ -18,6 +19,26 @@ export const createIntake = async (
   return result;
 };
 
+// ------------ update intake ---------------
+export const updateIntake = async (id: string, payload: Partial<IIntake>) => {
+  // check if intake exists
+  const existingIntake = await Intake.findById(id);
+  if (!existingIntake) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Intake not found');
+  }
+
+  // handle completed status
+  if (payload.status === IntakeStatus.COMPLETED) {
+    payload.completedAt = new Date();
+  }
+  
+  const result = await Intake.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return result;
+};
+
 export const IntakeServices = {
   createIntake,
+  updateIntake,
 };

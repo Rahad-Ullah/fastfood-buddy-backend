@@ -15,4 +15,12 @@ router.post(
   IntakeController.createIntake,
 );
 
+// update intake
+router.patch(
+  '/:id',
+  auth(USER_ROLES.USER),
+  validateRequest(IntakeValidations.updateIntake),
+  IntakeController.updateIntake,
+);
+
 export const intakeRoutes = router;
