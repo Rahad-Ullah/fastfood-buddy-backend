@@ -5,6 +5,7 @@ import { Food } from '../shared/food.model';
 import { Restaurant } from '../../restaurant/restaurant.model';
 import QueryBuilder from '../../../builder/QueryBuilder';
 import { Intake } from '../../intake/intake.model';
+import { Favourite } from '../../favourite/favourite.model';
 
 // -------------- create food --------------
 export const createFood = async (payload: IFood): Promise<IFood> => {
@@ -80,7 +81,10 @@ export const getSingleFoodById = async (id: string) => {
 };
 
 // -------------- get all food --------------
-export const getAllFoods = async (query: Record<string, unknown>) => {
+export const getAllFoods = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
   const foodQuery = new QueryBuilder(
     Food.find({ isDeleted: false })
       .select('name category restaurant isDeleted')
@@ -98,11 +102,10 @@ export const getAllFoods = async (query: Record<string, unknown>) => {
     foodQuery.getPaginationInfo(),
   ]);
 
-  // Attach last intake data of each item
   if (data.length > 0) {
+    // ---- Attach last intake data of each item ----
     const foodIds = data.map(food => food._id);
 
-    // Fetch the latest intake for each food ID
     const lastIntakes = await Intake.aggregate([
       {
         $match: {
@@ -124,9 +127,21 @@ export const getAllFoods = async (query: Record<string, unknown>) => {
       lastIntakes.map(item => [item._id.toString(), item.lastIntake]),
     );
 
-    // Attach to food objects
+    // ---- Attach favorite data of each item ----
+    const favorites = await Favourite.find({
+      user: userId,
+      food: { $in: foodIds },
+      isFavourite: true,
+    }).select('food');
+
+    // Set of food IDs for O(1) lookup
+    const favoriteSet = new Set(favorites.map(f => f.food.toString()));
+
+    // Attach both lastIntake and isFavourite to food objects
     data.forEach((food: any) => {
-      food.lastIntake = intakeMap.get(food._id.toString()) || null;
+      const foodIdStr = food._id.toString();
+      food.lastIntake = intakeMap.get(foodIdStr) || null;
+      food.isFavourite = favoriteSet.has(foodIdStr);
     });
   }
 

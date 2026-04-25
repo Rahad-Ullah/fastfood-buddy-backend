@@ -62,7 +62,10 @@ const getSingleFood = catchAsync(async (req: Request, res: Response) => {
 
 // -------------- get all foods --------------
 const getAllFoods = catchAsync(async (req: Request, res: Response) => {
-  const result = await FoodServices.getAllFoods(req.query);
+  const result = await FoodServices.getAllFoods(
+    req.user?.id as string,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
