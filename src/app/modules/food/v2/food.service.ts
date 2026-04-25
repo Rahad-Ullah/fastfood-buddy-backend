@@ -4,6 +4,7 @@ import { IFood } from './food.interface';
 import { Food } from '../shared/food.model';
 import { Restaurant } from '../../restaurant/restaurant.model';
 import QueryBuilder from '../../../builder/QueryBuilder';
+import { Intake } from '../../intake/intake.model';
 
 // -------------- create food --------------
 export const createFood = async (payload: IFood): Promise<IFood> => {
@@ -96,6 +97,38 @@ export const getAllFoods = async (query: Record<string, unknown>) => {
     foodQuery.modelQuery.lean(),
     foodQuery.getPaginationInfo(),
   ]);
+
+  // Attach last intake data of each item
+  if (data.length > 0) {
+    const foodIds = data.map(food => food._id);
+
+    // Fetch the latest intake for each food ID
+    const lastIntakes = await Intake.aggregate([
+      {
+        $match: {
+          food: { $in: foodIds },
+          isDeleted: false,
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: '$food',
+          lastIntake: { $first: '$$ROOT' },
+        },
+      },
+    ]);
+
+    // Map for quick O(1) lookup
+    const intakeMap = new Map(
+      lastIntakes.map(item => [item._id.toString(), item.lastIntake]),
+    );
+
+    // Attach to food objects
+    data.forEach((food: any) => {
+      food.lastIntake = intakeMap.get(food._id.toString()) || null;
+    });
+  }
 
   return { data, pagination };
 };
