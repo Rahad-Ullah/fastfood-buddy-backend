@@ -23,4 +23,12 @@ router.patch(
   IntakeController.updateIntake,
 );
 
+// get all intakes by food id
+router.get(
+  '/food/:id',
+  auth(USER_ROLES.USER),
+  validateRequest(IntakeValidations.getIntakesByFoodId),
+  IntakeController.getIntakesByFoodId,
+);
+
 export const intakeRoutes = router;

@@ -4,6 +4,7 @@ import { Food } from '../food/shared/food.model';
 import { IIntake } from './intake.interface';
 import { Intake } from './intake.model';
 import { IntakeStatus } from './intake.constants';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // ------------- create intake ---------------
 export const createIntake = async (
@@ -31,14 +32,39 @@ export const updateIntake = async (id: string, payload: Partial<IIntake>) => {
   if (payload.status === IntakeStatus.COMPLETED) {
     payload.completedAt = new Date();
   }
-  
+
   const result = await Intake.findByIdAndUpdate(id, payload, {
     new: true,
   });
   return result;
 };
 
+// ------------- get intakes by food id ---------------
+export const getIntakesByFoodId = async (
+  foodId: string,
+  query: Record<string, unknown>,
+) => {
+  const intakeQuery = new QueryBuilder(
+    Intake.find({ food: foodId }).populate(
+      'food',
+      'name category restaurant isDeleted',
+    ),
+    query,
+  )
+    .sort()
+    .paginate()
+    .fields();
+
+  const [data, pagination] = await Promise.all([
+    intakeQuery.modelQuery.lean(),
+    intakeQuery.getPaginationInfo(),
+  ])
+  
+  return { data, pagination };
+};
+
 export const IntakeServices = {
   createIntake,
   updateIntake,
+  getIntakesByFoodId,
 };

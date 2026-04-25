@@ -31,7 +31,15 @@ export const updateIntake = z.object({
     .strict(),
 });
 
+// get all intakes by food id
+export const getIntakesByFoodId = z.object({
+  params: z.object({
+    id: objectId('Food'),
+  }),
+});
+
 export const IntakeValidations = {
   createIntake,
   updateIntake,
+  getIntakesByFoodId,
 };
