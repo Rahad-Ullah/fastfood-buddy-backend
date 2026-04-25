@@ -10,7 +10,6 @@ const objectId = (field: string) =>
 export const createIntake = z.object({
   body: z
     .object({
-      user: objectId('User'),
       food: objectId('Food'),
     })
     .strict(),
