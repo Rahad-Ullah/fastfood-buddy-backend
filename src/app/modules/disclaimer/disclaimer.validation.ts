@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { DisclaimerType } from './disclaimer.constants';
 
 // Disclaimer creation schema
-export const createDisclaimerValidation = z.object({
+export const createDisclaimer = z.object({
   body: z
     .object({
       type: z.nativeEnum(DisclaimerType),
@@ -11,6 +11,16 @@ export const createDisclaimerValidation = z.object({
     .strict(),
 });
 
+// get single disclaimer by type
+export const getSingleDisclaimerByType = z.object({
+  params: z
+    .object({
+      type: z.nativeEnum(DisclaimerType),
+    })
+    .strict(),
+});
+
 export const DisclaimerValidations = {
-  createDisclaimerValidation,
+  createDisclaimer,
+  getSingleDisclaimerByType,
 };

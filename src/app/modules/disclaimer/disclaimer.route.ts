@@ -11,11 +11,15 @@ const router = express.Router();
 router.post(
   '/',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  validateRequest(DisclaimerValidations.createDisclaimerValidation),
-  DisclaimerController.createUpdateDisclaimer
+  validateRequest(DisclaimerValidations.createDisclaimer),
+  DisclaimerController.createUpdateDisclaimer,
 );
 
 // get single disclaimer by type
-router.get('/:type', DisclaimerController.getSingleDisclaimerByType);
+router.get(
+  '/:type',
+  validateRequest(DisclaimerValidations.getSingleDisclaimerByType),
+  DisclaimerController.getSingleDisclaimerByType,
+);
 
 export const disclaimerRoutes = router;
