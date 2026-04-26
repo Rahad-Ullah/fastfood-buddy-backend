@@ -1,5 +1,6 @@
 import QueryBuilder from '../../builder/QueryBuilder';
 import { Food } from '../food/shared/food.model';
+import { Intake } from '../intake/intake.model';
 import { IHistory } from './history.interface';
 import { History } from './history.model';
 
@@ -48,6 +49,38 @@ export const getHistoryByUserId = async (
     historyQuery.modelQuery.lean(),
     historyQuery.getPaginationInfo(),
   ]);
+
+  if (data.length > 0) {
+    // ---- Attach last intake data of each item ----
+    const foodIds = data.map(food => food._id);
+
+    const lastIntakes = await Intake.aggregate([
+      {
+        $match: {
+          food: { $in: foodIds },
+          isDeleted: false,
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: '$food',
+          lastIntake: { $first: '$$ROOT' },
+        },
+      },
+    ]);
+
+    // Map for quick O(1) lookup
+    const intakeMap = new Map(
+      lastIntakes.map(item => [item._id.toString(), item.lastIntake]),
+    );
+
+    // Attach food objects
+    data.forEach((food: any) => {
+      const foodIdStr = food._id.toString();
+      food.lastIntake = intakeMap.get(foodIdStr) || null;
+    });
+  }
 
   return { data, pagination };
 };
