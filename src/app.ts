@@ -1,12 +1,43 @@
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import rateLimit from 'express-rate-limit';
+import * as timeout from 'express-timeout-handler';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router_v1 from './routes/v1';
 import router_v2 from './routes/v2';
 import { Morgan } from './shared/morgen';
 import config from './config';
+
 const app = express();
+
+// timeout handler
+app.use(
+  timeout.handler({
+    timeout: 10000, // 10 seconds
+    onTimeout: (req: Request, res: Response) => {
+      res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
+        success: false,
+        message: 'Service timeout. The server took too long to respond.',
+      });
+    },
+  }),
+);
+
+// rate limiter
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100, // max 100 requests
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests, please try again later.',
+  },
+});
+
+// Apply the rate limiter to all API routes
+app.use('/api/', limiter);
 
 //morgan
 app.use(Morgan.successHandler);
