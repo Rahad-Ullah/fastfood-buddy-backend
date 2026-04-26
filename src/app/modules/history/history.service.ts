@@ -52,7 +52,7 @@ export const getHistoryByUserId = async (
 
   if (data.length > 0) {
     // ---- Attach last intake data of each item ----
-    const foodIds = data.map(food => food._id);
+    const foodIds = data.map((history: any) => history.food._id);
 
     const lastIntakes = await Intake.aggregate([
       {
@@ -76,9 +76,9 @@ export const getHistoryByUserId = async (
     );
 
     // Attach food objects
-    data.forEach((food: any) => {
-      const foodIdStr = food._id.toString();
-      food.lastIntake = intakeMap.get(foodIdStr) || null;
+    data.forEach((history: any) => {
+      const foodIdStr = history.food._id.toString();
+      history.lastIntake = intakeMap.get(foodIdStr) || null;
     });
   }
 

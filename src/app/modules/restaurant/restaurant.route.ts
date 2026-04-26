@@ -36,8 +36,8 @@ router.delete(
 // Get all restaurants route
 router.get(
   '/',
-  auth(),
-  RestaurantController.getAllRestaurants
+  // auth(),
+  RestaurantController.getAllRestaurants,
 );
 
 export const restaurantRoutes = router;
