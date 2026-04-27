@@ -4,6 +4,7 @@ import { Food } from '../food/shared/food.model';
 import { IFavourite } from './favourite.interface';
 import { Favourite } from './favourite.model';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { Intake } from '../intake/intake.model';
 
 // -------------- create favourite --------------
 const createFavourite = async (payload: IFavourite) => {
@@ -43,13 +44,13 @@ const deleteFavourite = async (id: string) => {
 // get all favourites by user id
 const getAllFavouritesByUserId = async (
   id: string,
-  query: Record<string, unknown>
+  query: Record<string, unknown>,
 ) => {
   const favouriteQuery = new QueryBuilder(
     Favourite.find({ user: id, isFavourite: true })
       .sort({ updatedAt: -1 })
       .populate('food', 'name category'),
-    query
+    query,
   )
     .paginate()
     .fields();
@@ -58,6 +59,38 @@ const getAllFavouritesByUserId = async (
     favouriteQuery.modelQuery.lean(),
     favouriteQuery.getPaginationInfo(),
   ]);
+
+  // ---- Attach last intake data of each item ----
+  if (data.length > 0) {
+    const foodIds = data.map((item: any) => item.food._id);
+
+    const lastIntakes = await Intake.aggregate([
+      {
+        $match: {
+          food: { $in: foodIds },
+          isDeleted: false,
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: '$food',
+          lastIntake: { $first: '$$ROOT' },
+        },
+      },
+    ]);
+
+    // Map for quick O(1) lookup
+    const intakeMap = new Map(
+      lastIntakes.map(item => [item._id.toString(), item.lastIntake]),
+    );
+
+    // Attach food objects
+    data.forEach((item: any) => {
+      const foodIdStr = item.food._id.toString();
+      item.lastIntake = intakeMap.get(foodIdStr) || null;
+    });
+  }
 
   return { data, pagination };
 };
