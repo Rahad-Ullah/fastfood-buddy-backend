@@ -33,7 +33,7 @@ const updateIntake = catchAsync(async (req: Request, res: Response) => {
 
 // get all intakes by food id
 const getIntakesByFoodId = catchAsync(async (req: Request, res: Response) => {
-  const result = await IntakeServices.getIntakesByFoodId(req.params.id, req.query);
+  const result = await IntakeServices.getIntakesByFoodId(req.params.id, req.user?.id, req.query);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -42,10 +42,11 @@ export const updateIntake = async (id: string, payload: Partial<IIntake>) => {
 // ------------- get intakes by food id ---------------
 export const getIntakesByFoodId = async (
   foodId: string,
+  userId: string,
   query: Record<string, unknown>,
 ) => {
   const intakeQuery = new QueryBuilder(
-    Intake.find({ food: foodId }).populate(
+    Intake.find({ food: foodId, user: userId }).populate(
       'food',
       'name category restaurant isDeleted',
     ),
@@ -58,8 +59,8 @@ export const getIntakesByFoodId = async (
   const [data, pagination] = await Promise.all([
     intakeQuery.modelQuery.lean(),
     intakeQuery.getPaginationInfo(),
-  ])
-  
+  ]);
+
   return { data, pagination };
 };
 
