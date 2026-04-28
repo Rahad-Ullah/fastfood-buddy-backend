@@ -63,6 +63,22 @@ const updateProfileToDB = async (
   return updateDoc;
 };
 
+// delete user account
+const deleteUserAccount = async (userId: string) => {
+  const isExistUser = await User.exists({ _id: userId });
+  if (!isExistUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+  
+  return result;
+}
+
 // toggle user status
 const toggleUserStatus = async (id: string) => {
   const isExistUser = await User.findById(id);
@@ -121,6 +137,7 @@ export const UserService = {
   createUserToDB,
   updateProfileToDB,
   toggleUserStatus,
+  deleteUserAccount,
   getSingleUserFromDB,
   getAllUsersFromDB,
 };
