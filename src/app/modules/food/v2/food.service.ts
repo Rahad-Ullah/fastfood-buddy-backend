@@ -6,6 +6,7 @@ import { Restaurant } from '../../restaurant/restaurant.model';
 import QueryBuilder from '../../../builder/QueryBuilder';
 import { Intake } from '../../intake/intake.model';
 import { Favourite } from '../../favourite/favourite.model';
+import { Types } from 'mongoose';
 
 // -------------- create food --------------
 export const createFood = async (payload: IFood): Promise<IFood> => {
@@ -110,6 +111,7 @@ export const getAllFoods = async (
       {
         $match: {
           food: { $in: foodIds },
+          user: new Types.ObjectId(userId),
           isDeleted: false,
         },
       },
