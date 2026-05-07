@@ -121,6 +121,7 @@ const importFoods = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
       'Invalid JSON file format, please check your JSON file',
+      // JSON.stringify(FoodValidations.bulkFoodSchema.safeParse(foods).error),
     );
   }
 

@@ -26,10 +26,12 @@ const updateFoodSchema = z.object({
     .strict(),
 });
 
-export const foodSchema = z.object({
-  name: z.string().nonempty('Name cannot be empty'),
-  category: z.nativeEnum(FoodCategory),
-});
+export const foodSchema = z
+  .object({
+    name: z.string().nonempty('Name cannot be empty'),
+    category: z.nativeEnum(FoodCategory),
+  })
+  .strict();
 
 export const bulkFoodSchema = z.array(foodSchema);
 
