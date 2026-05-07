@@ -23,4 +23,12 @@ router.patch(
     BuddyInsightController.updateBuddyInsight
 );
 
+// delete buddy insight
+router.delete(
+    '/:id',
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    validateRequest(BuddyInsightValidations.deleteBuddyInsightSchema),
+    BuddyInsightController.deleteBuddyInsight
+);
+
 export const buddyInsightRoutes = router;

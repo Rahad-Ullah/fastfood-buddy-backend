@@ -25,7 +25,17 @@ const updateBuddyInsight = async (
   return result;
 };
 
+// ------------ delete buddy insight ------------
+const deleteBuddyInsight = async (id: string): Promise<IBuddyInsight> => {
+  const result = await BuddyInsight.findByIdAndDelete(id);
+  if (!result) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Buddy insight not found');
+  }
+  return result;
+}
+
 export const BuddyInsightServices = {
   createBuddyInsight,
   updateBuddyInsight,
+  deleteBuddyInsight,
 };

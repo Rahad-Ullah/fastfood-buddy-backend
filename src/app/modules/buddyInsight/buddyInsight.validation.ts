@@ -27,7 +27,17 @@ const updateBuddyInsightSchema = z.object({
     .strict(),
 });
 
+// delete zod validation schemas
+const deleteBuddyInsightSchema = z.object({
+  params: z
+    .object({
+      id: z.string().length(24, 'Invalid ID'),
+    })
+    .strict(),
+});
+
 export const BuddyInsightValidations = {
   createBuddyInsightSchema,
   updateBuddyInsightSchema,
+  deleteBuddyInsightSchema,
 };
