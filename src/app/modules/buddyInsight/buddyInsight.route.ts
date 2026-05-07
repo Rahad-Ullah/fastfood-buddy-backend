@@ -9,26 +9,34 @@ const router = express.Router();
 
 // create buddy insight
 router.post(
-    '/create',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-    validateRequest(BuddyInsightValidations.createBuddyInsightSchema),
-    BuddyInsightController.createBuddyInsight
+  '/create',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  validateRequest(BuddyInsightValidations.createBuddyInsightSchema),
+  BuddyInsightController.createBuddyInsight,
 );
 
 // update buddy insight
 router.patch(
-    '/:id',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-    validateRequest(BuddyInsightValidations.updateBuddyInsightSchema),
-    BuddyInsightController.updateBuddyInsight
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  validateRequest(BuddyInsightValidations.updateBuddyInsightSchema),
+  BuddyInsightController.updateBuddyInsight,
 );
 
 // delete buddy insight
 router.delete(
-    '/:id',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-    validateRequest(BuddyInsightValidations.deleteBuddyInsightSchema),
-    BuddyInsightController.deleteBuddyInsight
+  '/:id',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  validateRequest(BuddyInsightValidations.deleteBuddyInsightSchema),
+  BuddyInsightController.deleteBuddyInsight,
+);
+
+// get all buddy insight
+router.get(
+  '/',
+  auth(),
+  validateRequest(BuddyInsightValidations.getAllBuddyInsightsSchema),
+  BuddyInsightController.getAllBuddyInsights,
 );
 
 export const buddyInsightRoutes = router;

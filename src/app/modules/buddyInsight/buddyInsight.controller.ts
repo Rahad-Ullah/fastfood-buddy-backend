@@ -43,8 +43,21 @@ const deleteBuddyInsight = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all buddy insights
+const getAllBuddyInsights = catchAsync(async (req: Request, res: Response) => {
+  const result = await BuddyInsightServices.getAllBuddyInsights(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Buddy insights retrieved successfully',
+    data: result,
+  });
+});
+
 export const BuddyInsightController = {
   createBuddyInsight,
   updateBuddyInsight,
   deleteBuddyInsight,
+  getAllBuddyInsights,
 };

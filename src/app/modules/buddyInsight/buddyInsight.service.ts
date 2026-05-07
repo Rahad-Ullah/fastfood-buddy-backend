@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { IBuddyInsight } from './buddyInsight.interface';
 import { BuddyInsight } from './buddyInsight.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // ------------ create buddy insight ------------
 const createBuddyInsight = async (
@@ -34,8 +35,24 @@ const deleteBuddyInsight = async (id: string): Promise<IBuddyInsight> => {
   return result;
 }
 
+// ------------ get all buddy insights ------------
+const getAllBuddyInsights = async (query: Record<string, unknown>): Promise<IBuddyInsight[]> => {
+  const insightQuery = new QueryBuilder(
+    BuddyInsight.find(),
+    query
+  )
+    .search(['message'])
+    .filter()
+    .sort()
+    .fields();
+
+  const data = await insightQuery.modelQuery;
+  return data;
+};
+
 export const BuddyInsightServices = {
   createBuddyInsight,
   updateBuddyInsight,
   deleteBuddyInsight,
+  getAllBuddyInsights,
 };

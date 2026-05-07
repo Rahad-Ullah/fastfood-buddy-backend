@@ -36,8 +36,20 @@ const deleteBuddyInsightSchema = z.object({
     .strict(),
 });
 
+// get all insights validation schemas
+export const getAllBuddyInsightsSchema = z.object({
+  query: z
+    .object({
+      outcome: z.nativeEnum(IntakeOutcome).optional(),
+      searchTerm: z.string().optional(),
+      isActive: z.string().optional(),
+    })
+    .strict(),
+});
+
 export const BuddyInsightValidations = {
   createBuddyInsightSchema,
   updateBuddyInsightSchema,
   deleteBuddyInsightSchema,
+  getAllBuddyInsightsSchema,
 };
