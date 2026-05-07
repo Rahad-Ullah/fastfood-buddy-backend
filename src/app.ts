@@ -11,6 +11,9 @@ import config from './config';
 
 const app = express();
 
+// trust proxy header for ip
+app.set('trust proxy', 1)
+
 // timeout handler
 app.use(
   timeout.handler({
@@ -27,7 +30,7 @@ app.use(
 // rate limiter
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 100, // max 100 requests
+  max: 500, // max 500 requests
   standardHeaders: true,
   legacyHeaders: false,
   message: {
