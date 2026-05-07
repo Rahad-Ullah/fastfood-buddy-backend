@@ -13,10 +13,16 @@ const createBuddyInsightSchema = z.object({
 
 // update zod validation schemas
 const updateBuddyInsightSchema = z.object({
+  params: z
+    .object({
+      id: z.string().length(24, 'Invalid ID'),
+    })
+    .strict(),
   body: z
     .object({
       outcome: z.nativeEnum(IntakeOutcome).optional(),
       message: z.string().nonempty('Message cannot be empty').optional(),
+      isActive: z.boolean().optional(),
     })
     .strict(),
 });
